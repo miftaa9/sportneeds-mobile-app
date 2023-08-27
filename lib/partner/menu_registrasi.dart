@@ -99,9 +99,7 @@ class Menu_Registrasi extends StatelessWidget {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => Regist_Nutrisionis(),
-                          ));
+                          Navigator.pushNamed(context, '/reg_nutrisionis');
                         },
                         child: const Padding(
                           padding: EdgeInsets.all(12.0),
@@ -125,9 +123,7 @@ class Menu_Registrasi extends StatelessWidget {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => Regist_Nutrishop(),
-                          ));
+                          Navigator.pushNamed(context, '/reg_nutrishop');
                         },
                         child: const Padding(
                           padding: EdgeInsets.all(12.0),
@@ -151,9 +147,7 @@ class Menu_Registrasi extends StatelessWidget {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => Regist_Driver(),
-                          ));
+                          Navigator.pushNamed(context, '/reg_driver');
                         },
                         child: const Padding(
                           padding: EdgeInsets.all(12.0),

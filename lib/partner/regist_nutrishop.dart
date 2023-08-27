@@ -1,9 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:first_app/HomePage.dart';
+import 'package:first_app/main.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class Regist_Nutrishop extends StatelessWidget {
-  void click() {}
+class Regist_Nutrishop extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _Regist_Nutrishop();
+  }
+}
+
+class _Regist_Nutrishop extends State<Regist_Nutrishop> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passController = TextEditingController();
+  TextEditingController namaController = TextEditingController();
+  TextEditingController notelpController = TextEditingController();
+  TextEditingController namatokoController = TextEditingController();
+
+  Future registProcess() async {
+    final data = await supabase
+        .from('users')
+        .insert({
+          "email": emailController.text.toString(),
+          "pass": passController.text.toString(),
+          "level": 2,
+        })
+        .select()
+        .single();
+    final idu = data['id'];
+    await supabase.from('user_nutrishop').insert({
+      "nama": namaController.text.toString(),
+      "notelp": notelpController.text.toString(),
+      "namatoko": namatokoController.text.toString(),
+      "user_id": idu,
+    });
+    Fluttertoast.showToast(
+      msg: 'Sukses pendaftaran',
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.TOP,
+    );
+    Navigator.pushNamed(context, '/login');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,15 +81,6 @@ class Regist_Nutrishop extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
           ),
-          /*decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                Colors.purpleAccent,
-                Colors.amber,
-                Colors.blue,
-              ])),*/
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
@@ -68,7 +99,6 @@ class Regist_Nutrishop extends StatelessWidget {
               ),
               Container(
                 width: 325,
-                height: 440,
                 decoration: const BoxDecoration(
                   color: Color(0xFF2B9EA4),
                   borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -82,9 +112,10 @@ class Regist_Nutrishop extends StatelessWidget {
                     Container(
                       width: 260,
                       height: 60,
-                      child: const TextField(
+                      child: TextField(
+                        controller: emailController,
                         style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           /*suffix: Icon(
                             FontAwesomeIcons.envelope,
                             color: Colors.red,
@@ -108,7 +139,8 @@ class Regist_Nutrishop extends StatelessWidget {
                     Container(
                       width: 260,
                       height: 60,
-                      child: const TextField(
+                      child: TextField(
+                        controller: passController,
                         style: TextStyle(color: Colors.white),
                         obscureText: true,
                         decoration: InputDecoration(
@@ -129,10 +161,14 @@ class Regist_Nutrishop extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     Container(
                       width: 260,
                       height: 60,
-                      child: const TextField(
+                      child: TextField(
+                        controller: namaController,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           /*suffix: Icon(
@@ -152,17 +188,21 @@ class Regist_Nutrishop extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     Container(
                       width: 260,
                       height: 60,
-                      child: const TextField(
+                      child: TextField(
+                        controller: namatokoController,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           /*suffix: Icon(
                             FontAwesomeIcons.eyeSlash,
                             color: Colors.red,
                           ),*/
-                          labelText: "No Telp",
+                          labelText: "Nama Toko",
                           labelStyle: TextStyle(color: Colors.white),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
@@ -175,17 +215,21 @@ class Regist_Nutrishop extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     Container(
                       width: 260,
                       height: 60,
-                      child: const TextField(
+                      child: TextField(
+                        controller: notelpController,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           /*suffix: Icon(
                             FontAwesomeIcons.eyeSlash,
                             color: Colors.red,
                           ),*/
-                          labelText: "Alamat",
+                          labelText: "No Telp",
                           labelStyle: TextStyle(color: Colors.white),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
@@ -208,9 +252,7 @@ class Regist_Nutrishop extends StatelessWidget {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => HomePage(),
-                          ));
+                          registProcess();
                         },
                         child: const Padding(
                           padding: EdgeInsets.all(12.0),

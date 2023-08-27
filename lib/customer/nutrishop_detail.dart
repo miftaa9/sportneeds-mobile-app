@@ -5,23 +5,28 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:first_app/main.dart';
 
-class CustomerShop extends StatefulWidget {
+class CustomerShopDetail extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _CustomerShop();
+    return _CustomerShopDetail();
   }
 }
 
-class _CustomerShop extends State<CustomerShop> {
-  final _future =
-      supabase.from('user_nutrishop').select<List<Map<String, dynamic>>>();
+class _CustomerShopDetail extends State<CustomerShopDetail> {
   @override
   Widget build(BuildContext context) {
+    final arg = ModalRoute.of(context)!.settings.arguments as Map;
+    final int uid = arg["user_id"];
+    final String namatoko = arg["namatoko"];
+    final _future = supabase
+        .from('nutrishop_produk')
+        .select<List<Map<String, dynamic>>>()
+        .eq('user_id', uid);
     return Scaffold(
       backgroundColor: Color(0xFF2B9EA4),
-      appBar: const LayoutCustomerAppBar(
-          title: Text('Nutrishop',
-              style: TextStyle(
+      appBar: LayoutCustomerAppBar(
+          title: Text(namatoko,
+              style: const TextStyle(
                 fontSize: 34,
                 color: Color(0xFF2B9EA4),
               ))),
@@ -57,12 +62,12 @@ class _CustomerShop extends State<CustomerShop> {
                               color: Color(0xFF2B9EA4)),
                           children: [
                             TextSpan(
-                              text: country['namatoko'],
+                              text: country['nama'],
                             ),
                           ],
                         ),
                       ),
-                      subtitle: Text(country['nama']),
+                      subtitle: Text("Harga : ${country['harga']}"),
                       onTap: () {},
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -71,15 +76,16 @@ class _CustomerShop extends State<CustomerShop> {
                               onPressed: () {
                                 Navigator.pushNamed(
                                   context,
-                                  '/customer_shop_detail',
+                                  '/customer_shop_addcart',
                                   arguments: {
-                                    'user_id': country['user_id'],
-                                    'namatoko': country['namatoko'],
-                                    'nama': country['nama'],
+                                    'user_id': uid,
+                                    'produk_id': country['id'],
+                                    'data': country,
+                                    'namatoko': namatoko,
                                   },
                                 );
                               },
-                              icon: const Icon(Icons.arrow_forward_ios),
+                              icon: const Icon(Icons.add_shopping_cart),
                               color: Color(0xFF2B9EA4)),
                         ],
                       ),

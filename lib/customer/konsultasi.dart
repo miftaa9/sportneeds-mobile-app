@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:first_app/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:developer';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CustomerKonsultasi extends StatefulWidget {
   const CustomerKonsultasi({Key? key}) : super(key: key);
@@ -19,6 +21,17 @@ class CustomerKonsultasi extends StatefulWidget {
 }
 
 class _CustomerKonsultasi extends State<CustomerKonsultasi> {
+  int? _senderId = 0;
+  void initState() {
+    _loadSenderId();
+    super.initState();
+  }
+
+  Future<void> _loadSenderId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _senderId = prefs.getInt('userid');
+  }
+
   final _future = Supabase.instance.client
       .from('user_nutrisionis')
       .select<List<Map<String, dynamic>>>();
@@ -45,14 +58,17 @@ class _CustomerKonsultasi extends State<CustomerKonsultasi> {
             itemCount: countries.length,
             itemBuilder: ((context, index) {
               final country = countries[index];
-              var jk = Icons.question_mark;
-              if (country['jk'] == 'Pria') {
-                jk = Icons.male;
-              } else if (country['jk'] == 'Wanita') {
-                jk = Icons.female;
+              var nama = country['nama'];
+              if (country['active'] == false) {
+                nama = country['nama'] + " (tidak aktif)";
               }
               return Card(
-                margin: const EdgeInsets.all(20),
+                margin: const EdgeInsets.only(
+                  left: 20,
+                  top: 5,
+                  right: 20,
+                  bottom: 5,
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -65,29 +81,37 @@ class _CustomerKonsultasi extends State<CustomerKonsultasi> {
                       title: RichText(
                         selectionColor: Color(0xFF2B9EA4),
                         text: TextSpan(
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF2B9EA4)),
                           children: [
                             TextSpan(
-                              text: country['nama'],
-                            ),
-                            WidgetSpan(
-                              child: Icon(jk, size: 18),
+                              text: nama,
                             ),
                           ],
                         ),
                       ),
-                      subtitle: Text(country['pend']),
+                      subtitle: Text(''),
                       onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/customer_konsultasi_show',
-                          arguments: {
-                            'nutrisionis_id': country['user_id'],
-                            'nama': country['nama'],
-                          },
-                        );
+                        if (country['active'] == true) {
+                          Navigator.pushNamed(
+                            context,
+                            '/customer_konsultasi_show',
+                            arguments: {
+                              'nutrisionis_id': country['user_id'],
+                              'nama': country['nama'],
+                              'customer_id': _senderId,
+                            },
+                          );
+                        } else if (country['active'] == false) {
+                          Fluttertoast.showToast(
+                            msg: 'Nutrisionis Tidak aktif',
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.TOP,
+                          );
+                        }
                       },
                     ),
                   ],

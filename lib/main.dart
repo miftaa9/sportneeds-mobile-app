@@ -1,3 +1,14 @@
+import 'package:first_app/customer/cart.dart';
+import 'package:first_app/customer/cart_checkout.dart';
+import 'package:first_app/customer/nutrishop_addcart.dart';
+import 'package:first_app/customer/nutrishop_detail.dart';
+import 'package:first_app/partner/driver.dart';
+import 'package:first_app/partner/nutrishop_home.dart';
+import 'package:first_app/partner/nutrishop_produk.dart';
+import 'package:first_app/partner/nutrishop_produk_add.dart';
+import 'package:first_app/partner/nutrisionis_chat.dart';
+import 'package:first_app/partner/nutrisionis_home.dart';
+import 'package:first_app/partner/nutrisionis_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -48,12 +59,23 @@ class MyApp extends StatelessWidget {
         '/customer_edukasi': (_) => CustomerEdukasi(),
         '/customer_edukasi_show': (_) => CustomerEdukasiShow(),
         '/customer_shop': (_) => CustomerShop(),
+        '/customer_shop_detail': (_) => CustomerShopDetail(),
+        '/customer_shop_addcart': (_) => CustomerShopAddcart(),
+        '/customer_cart': (_) => CustomerCart(),
+        '/customer_cart_checkout': (_) => CustomerCartCheckout(),
         '/customer_konsultasi': (_) => CustomerKonsultasi(),
         '/customer_konsultasi_show': (_) => CustomerKonsultasiShow(),
         '/menu_registrasi': (_) => Menu_Registrasi(),
         '/reg_driver': (_) => Regist_Driver(),
         '/reg_nutrishop': (_) => Regist_Nutrishop(),
         '/reg_nutrisionis': (_) => Regist_Nutrisionis(),
+        '/nutrisionis_home': (_) => NutrisionisHome(),
+        '/nutrisionis_konsultasi_show': (_) => NutrisionisChat(),
+        '/nutrisionis_profile': (_) => NutrisionisProfile(),
+        '/nutrishop_home': (_) => NutrishopHome(),
+        '/nutrishop_produk': (_) => NutrishopProduk(),
+        '/nutrishop_produk_add': (_) => NutrishopAdd(),
+        '/driver_home': (_) => DriverHome(),
       },
     );
   }

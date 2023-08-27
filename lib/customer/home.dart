@@ -1,3 +1,4 @@
+import 'package:first_app/layout/customerBottomNav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:responsive_grid/responsive_grid.dart';
@@ -63,9 +64,18 @@ class _Customer_Home extends State<Customer_Home> {
             ),
             backgroundColor: Colors.white, //You can make this transparent
             elevation: 0.0, //No shadow
-            /*actions: [
-          Icon(Icons.keyboard_arrow_down),
-        ],*/
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Icons.logout,
+                  color: Color(0xFF2B9EA4),
+                ),
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, "/first", (r) => false);
+                },
+              )
+            ],
             actionsIconTheme: IconThemeData(color: Color(0xFF2B9EA4), size: 36),
             toolbarHeight: 80, // default is 56
           ),
@@ -271,37 +281,7 @@ class _Customer_Home extends State<Customer_Home> {
               ],
             ),
           ]),
-          bottomNavigationBar: BottomNavigationBar(
-            iconSize: 40,
-            selectedIconTheme:
-                IconThemeData(color: Colors.amberAccent, size: 40),
-            selectedItemColor: Colors.amberAccent,
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: ImageIcon(
-                  AssetImage("asset/images/b/home.png"),
-                  color: Color(0xFF2B9EA4),
-                ),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: ImageIcon(
-                  AssetImage("asset/images/b/pesanan.png"),
-                  color: Color(0xFF2B9EA4),
-                ),
-                label: 'Cart',
-              ),
-              BottomNavigationBarItem(
-                icon: ImageIcon(
-                  AssetImage("asset/images/b/akun.png"),
-                  color: Color(0xFF2B9EA4),
-                ),
-                label: 'Profile',
-              ),
-            ],
-          ),
+          bottomNavigationBar: LayoutCustomerBottomNav(),
         );
       },
     );

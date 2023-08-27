@@ -70,20 +70,20 @@ class Message {
         createdAt = DateTime.parse(map['created_at']);
 }
 
-class CustomerKonsultasiShow extends StatefulWidget {
-  const CustomerKonsultasiShow({Key? key}) : super(key: key);
+class NutrisionisChat extends StatefulWidget {
+  const NutrisionisChat({Key? key}) : super(key: key);
   static Route<void> route() {
-    return MaterialPageRoute(builder: (context) => CustomerKonsultasiShow());
+    return MaterialPageRoute(builder: (context) => NutrisionisChat());
   }
 
   @override
   State<StatefulWidget> createState() {
-    return _CustomerKonsultasiShow();
+    return _NutrisionisChat();
   }
 }
 
-class _CustomerKonsultasiShow extends State<CustomerKonsultasiShow> {
-  late final Stream<List<Message>> _messagesStream;
+class _NutrisionisChat extends State<NutrisionisChat> {
+  //late final Stream<List<Message>> _messagesStream;
   //final Map<int, Nutrisionis> _profileCache = {};
   int _senderId = 0;
   //int nid = 0;
@@ -112,15 +112,14 @@ class _CustomerKonsultasiShow extends State<CustomerKonsultasiShow> {
     final arg = ModalRoute.of(context)!.settings.arguments as Map;
     final int nid = arg["customer_id"];
     final int nid2 = arg["nutrisionis_id"];
-    _senderId = nid;
+    _senderId = nid2;
     final uid = "$nid.$nid2";
     log("$uid");
-    _messagesStream = supabase
+    late final Stream<List<Message>> _messagesStream = supabase
         .from('konsultasi')
         .stream(primaryKey: ['id'])
         .eq('uid', uid)
-        //.eq('customer_id', value)
-        //.eq('nutrisionis_id', value)
+        //.eq('nutrisionis_id', _senderId)
         .order('created_at')
         .map((maps) => maps.map((map) => Message.fromMap(map: map)).toList());
     return Scaffold(

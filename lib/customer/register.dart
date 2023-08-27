@@ -5,6 +5,8 @@ import 'package:first_app/HomePage.dart';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
+import 'package:first_app/main.dart';
+import 'dart:developer';
 
 class Customer_Register extends StatefulWidget {
   @override
@@ -21,36 +23,30 @@ class _Register extends State<Customer_Register> {
   TextEditingController alamatController = TextEditingController();
 
   Future registProcess() async {
-    //var url = "https://dkrh.xyz/flutter/login.php";
-
-    var url = Uri.https("dkrh.xyz", '/flutter/register.php');
-    var res = await http.post(url, body: {
-      "email": emailController.text.toString(),
-      "pass": passController.text.toString(),
+    final data = await supabase
+        .from('users')
+        .insert({
+          "email": emailController.text.toString(),
+          "pass": passController.text.toString(),
+          "level": 0,
+        })
+        .select()
+        .single();
+    final idu = data['id'];
+    await supabase.from('user_customer').insert({
       "nama": namaController.text.toString(),
       "notelp": notelpController.text.toString(),
       "alamat": alamatController.text.toString(),
-      "type": "0",
+      "user_id": idu,
     });
-    var data = json.decode(res.body);
-    if (data['success']) {
-      Fluttertoast.showToast(
-        msg: 'Sukses pendaftaran',
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
-      );
-      Navigator.of(context).pushReplacementNamed('/login');
-    } else {
-      Fluttertoast.showToast(
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        msg: data['message'],
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.TOP,
-      );
-    }
+    Fluttertoast.showToast(
+      msg: 'Sukses pendaftaran',
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.TOP,
+    );
+    Navigator.pushNamed(context, '/login');
   }
 
   @override
@@ -87,7 +83,7 @@ class _Register extends State<Customer_Register> {
           margin: const EdgeInsets.only(top: 10.0),
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.white,
           ),
           /*decoration: const BoxDecoration(
@@ -162,7 +158,7 @@ class _Register extends State<Customer_Register> {
                         controller: passController,
                         style: TextStyle(color: Colors.white),
                         obscureText: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           suffix: Icon(
                             FontAwesomeIcons.eyeSlash,
                             color: Colors.white,
@@ -189,7 +185,7 @@ class _Register extends State<Customer_Register> {
                       child: TextField(
                         controller: namaController,
                         style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           /*suffix: Icon(
                             FontAwesomeIcons.eyeSlash,
                             color: Colors.red,
@@ -216,7 +212,7 @@ class _Register extends State<Customer_Register> {
                       child: TextField(
                         controller: notelpController,
                         style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           /*suffix: Icon(
                             FontAwesomeIcons.eyeSlash,
                             color: Colors.red,
@@ -243,7 +239,7 @@ class _Register extends State<Customer_Register> {
                       child: TextField(
                         controller: alamatController,
                         style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           /*suffix: Icon(
                             FontAwesomeIcons.eyeSlash,
                             color: Colors.red,

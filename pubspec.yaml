@@ -31,6 +31,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  strintcurrency:
+    git:
+      url: "https://github.com/FathanAkram-app/StrIntCurrencyLibrary.git"
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   fluttertoast: ^8.2.2
@@ -43,6 +46,11 @@ dependencies:
   supabase_flutter: ^1.10.3
   timeago: ^3.5.0
   shared_preferences: ^2.2.0
+  flutter_local_notifications: ^15.1.0+1
+  flutter_map: ^1.1.1
+  flutter_osm_plugin: ^0.60.4
+  flutter_hooks: ^0.18.5+1
+  osm_flutter_hooks: ^1.4.0
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +85,9 @@ flutter:
     - asset/images/b/home.png
     - asset/images/b/pesanan.png
     - asset/images/b/akun.png
+    - asset/images/b/pesanan-partners.png
+    - asset/images/b/produk-saya.png
+    - asset/images/b/pesan.png
 
   # assets:
   #   - images/a_dot_burr.jpeg

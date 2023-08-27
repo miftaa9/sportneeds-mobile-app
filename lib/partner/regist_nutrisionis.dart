@@ -1,9 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:first_app/HomePage.dart';
+import 'package:first_app/main.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class Regist_Nutrisionis extends StatelessWidget {
-  void click() {}
+class Regist_Nutrisionis extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _Regist_Nutrisionis();
+  }
+}
+
+class _Regist_Nutrisionis extends State<Regist_Nutrisionis> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passController = TextEditingController();
+  TextEditingController namaController = TextEditingController();
+  TextEditingController notelpController = TextEditingController();
+  TextEditingController alamatController = TextEditingController();
+
+  Future registProcess() async {
+    final data = await supabase
+        .from('users')
+        .insert({
+          "email": emailController.text.toString(),
+          "pass": passController.text.toString(),
+          "level": 1,
+        })
+        .select()
+        .single();
+    final idu = data['id'];
+    await supabase.from('user_nutrisionis').insert({
+      "nama": namaController.text.toString(),
+      "notelp": notelpController.text.toString(),
+      "alamat": alamatController.text.toString(),
+      "user_id": idu,
+    });
+    Fluttertoast.showToast(
+      msg: 'Sukses pendaftaran',
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.TOP,
+    );
+    Navigator.pushNamed(context, '/login');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +109,6 @@ class Regist_Nutrisionis extends StatelessWidget {
               ),
               Container(
                 width: 325,
-                height: 440,
                 decoration: const BoxDecoration(
                   color: Color(0xFF2B9EA4),
                   borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -82,7 +122,8 @@ class Regist_Nutrisionis extends StatelessWidget {
                     Container(
                       width: 260,
                       height: 60,
-                      child: const TextField(
+                      child: TextField(
+                        controller: emailController,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           /*suffix: Icon(
@@ -108,7 +149,8 @@ class Regist_Nutrisionis extends StatelessWidget {
                     Container(
                       width: 260,
                       height: 60,
-                      child: const TextField(
+                      child: TextField(
+                        controller: passController,
                         style: TextStyle(color: Colors.white),
                         obscureText: true,
                         decoration: InputDecoration(
@@ -129,10 +171,14 @@ class Regist_Nutrisionis extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     Container(
                       width: 260,
                       height: 60,
-                      child: const TextField(
+                      child: TextField(
+                        controller: namaController,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           /*suffix: Icon(
@@ -152,10 +198,14 @@ class Regist_Nutrisionis extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     Container(
                       width: 260,
                       height: 60,
-                      child: const TextField(
+                      child: TextField(
+                        controller: notelpController,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           /*suffix: Icon(
@@ -175,10 +225,14 @@ class Regist_Nutrisionis extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     Container(
                       width: 260,
                       height: 60,
-                      child: const TextField(
+                      child: TextField(
+                        controller: alamatController,
                         style: TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           /*suffix: Icon(
@@ -198,6 +252,9 @@ class Regist_Nutrisionis extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     Container(
                       margin: const EdgeInsets.only(top: 10.0),
                       alignment: Alignment.center,
@@ -208,9 +265,7 @@ class Regist_Nutrisionis extends StatelessWidget {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => HomePage(),
-                          ));
+                          registProcess();
                         },
                         child: const Padding(
                           padding: EdgeInsets.all(12.0),

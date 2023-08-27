@@ -19,6 +19,22 @@ class LayoutCustomerBottomNav extends StatelessWidget
       selectedItemColor: Colors.amberAccent,
       showSelectedLabels: false,
       showUnselectedLabels: false,
+      onTap: (index) {
+        switch (index) {
+          case 0:
+            Navigator.pushNamedAndRemoveUntil(
+                context, "/customer_home", (r) => false);
+            break;
+          case 1:
+            Navigator.pushNamedAndRemoveUntil(
+                context, "/customer_cart", (r) => false);
+            break;
+          case 2:
+            Navigator.pushNamedAndRemoveUntil(
+                context, "/customer_home", (r) => false);
+            break;
+        }
+      },
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: ImageIcon(

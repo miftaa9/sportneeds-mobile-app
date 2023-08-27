@@ -56,16 +56,32 @@ class _Login extends State<Login> {
           gravity: ToastGravity.TOP,
         );
       } else {
+        String tablenama = "";
+        String redirect = "";
+        if (a['level'] == 0) {
+          tablenama = 'user_customer';
+          redirect = '/customer_home';
+        } else if (a['level'] == 1) {
+          tablenama = 'user_nutrisionis';
+          redirect = '/nutrisionis_home';
+        } else if (a['level'] == 2) {
+          tablenama = 'user_nutrishop';
+          redirect = '/nutrishop_home';
+        } else if (a['level'] == 3) {
+          tablenama = 'user_driver';
+          redirect = '/driver_home';
+        }
         final datacust = await supabase
-            .from('user_customer')
+            .from(tablenama)
             .select()
             .eq('user_id', a['id'])
             .single();
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setInt('userid', a['id']);
         await prefs.setString('usernama', datacust['nama']);
+        await prefs.setBool('active', datacust['active']);
         await prefs.setString('email', a['email']);
-        Navigator.pushNamed(context, '/customer_home');
+        Navigator.pushNamed(context, redirect);
       }
     }
     if (mounted) {

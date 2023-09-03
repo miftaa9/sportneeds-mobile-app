@@ -1,0 +1,96 @@
+import 'package:first_app/layout/customerAppBar.dart';
+import 'package:first_app/layout/customerBottomNav.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:responsive_grid/responsive_grid.dart';
+import 'package:first_app/main.dart';
+
+class CustomerShop extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _CustomerShop();
+  }
+}
+
+class _CustomerShop extends State<CustomerShop> {
+  final _future =
+      supabase.from('user_nutrishop').select<List<Map<String, dynamic>>>();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xFF2B9EA4),
+      appBar: const LayoutCustomerAppBar(
+          title: Text('Nutrishop',
+              style: TextStyle(
+                fontSize: 34,
+                color: Color(0xFF2B9EA4),
+              ))),
+      bottomNavigationBar: LayoutCustomerBottomNav(),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: _future,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final countries = snapshot.data!;
+          return ListView.builder(
+            itemCount: countries.length,
+            itemBuilder: ((context, index) {
+              final country = countries[index];
+              return Card(
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                      leading: const Icon(
+                        Icons.account_circle,
+                        size: 50,
+                        color: Color(0xFF2B9EA4),
+                      ),
+                      title: RichText(
+                        selectionColor: Color(0xFF2B9EA4),
+                        text: TextSpan(
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF2B9EA4)),
+                          children: [
+                            TextSpan(
+                              text: country['namatoko'],
+                            ),
+                          ],
+                        ),
+                      ),
+                      subtitle: Text(country['nama']),
+                      onTap: () {},
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  '/customer_shop_detail',
+                                  arguments: {
+                                    'user_id': country['user_id'],
+                                    'namatoko': country['namatoko'],
+                                    'nama': country['nama'],
+                                  },
+                                );
+                              },
+                              icon: const Icon(Icons.arrow_forward_ios),
+                              color: Color(0xFF2B9EA4)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          );
+        },
+      ),
+    );
+  }
+}

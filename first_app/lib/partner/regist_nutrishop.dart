@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:first_app/main.dart';
@@ -16,36 +18,69 @@ class _Regist_Nutrishop extends State<Regist_Nutrishop> {
   TextEditingController namaController = TextEditingController();
   TextEditingController notelpController = TextEditingController();
   TextEditingController namatokoController = TextEditingController();
+  TextEditingController alamatController = TextEditingController();
+  TextEditingController latController = TextEditingController();
+  TextEditingController lngController = TextEditingController();
+
+  var _info = ["", "", ""];
 
   Future registProcess() async {
-    final data = await supabase
-        .from('users')
-        .insert({
-          "email": emailController.text.toString(),
-          "pass": passController.text.toString(),
-          "level": 2,
-        })
-        .select()
-        .single();
-    final idu = data['id'];
-    await supabase.from('user_nutrishop').insert({
-      "nama": namaController.text.toString(),
-      "notelp": notelpController.text.toString(),
-      "namatoko": namatokoController.text.toString(),
-      "user_id": idu,
-    });
-    Fluttertoast.showToast(
-      msg: 'Sukses pendaftaran',
-      backgroundColor: Colors.green,
-      textColor: Colors.white,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.TOP,
-    );
-    Navigator.pushNamed(context, '/login');
+    try {
+      final data = await supabase
+          .from('users')
+          .insert({
+            "email": emailController.text.toString(),
+            "pass": passController.text.toString(),
+            "level": 2,
+          })
+          .select()
+          .single();
+      final idu = data['id'];
+      await supabase.from('user_nutrishop').insert({
+        "nama": namaController.text.toString(),
+        "notelp": notelpController.text.toString(),
+        "namatoko": namatokoController.text.toString(),
+        "latitude": latController.text.toString(),
+        "longitude": lngController.text.toString(),
+        "alamat": alamatController.text.toString(),
+        "user_id": idu,
+      });
+      Fluttertoast.showToast(
+        msg: 'Sukses pendaftaran',
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+      );
+      Navigator.pushNamed(context, '/login');
+    } on Exception catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Email sudah dipakai!!!',
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+      );
+      print('error caught: $e');
+    }
+  }
+
+  void updateInformation(information) {
+    setState(() => {_info = information});
+  }
+
+  void moveToSecondPage() async {
+    final information =
+        await Navigator.pushNamed(context, '/reg_nutrishop_lokasi');
+    log("$information");
+    updateInformation(information);
   }
 
   @override
   Widget build(BuildContext context) {
+    latController.text = _info[0];
+    lngController.text = _info[1];
+    alamatController.text = _info[2];
     return Scaffold(
       appBar: AppBar(
         title: Text(''), // You can add title here
@@ -242,20 +277,127 @@ class _Regist_Nutrishop extends State<Regist_Nutrishop> {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 12,
+                    ),
                     Container(
-                      margin: const EdgeInsets.only(top: 10.0),
-                      alignment: Alignment.center,
-                      width: 250,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(50)),
-                        color: Colors.white,
-                      ),
+                      width: 200,
+                      height: 45,
                       child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
                         onPressed: () {
-                          registProcess();
+                          moveToSecondPage();
                         },
-                        child: const Padding(
-                          padding: EdgeInsets.all(12.0),
+                        child: Text(
+                          "Lokasi Alamat",
+                          style: TextStyle(
+                            color: Color(0xFF2B9EA4),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 260,
+                      height: 60,
+                      child: TextField(
+                        enabled: false,
+                        controller: alamatController,
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          /*suffix: Icon(
+                            FontAwesomeIcons.eyeSlash,
+                            color: Colors.red,
+                          ),*/
+                          labelText: "Alamat",
+                          labelStyle: TextStyle(color: Colors.white),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 260,
+                      height: 60,
+                      child: TextField(
+                        enabled: false,
+                        controller: latController,
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          /*suffix: Icon(
+                            FontAwesomeIcons.eyeSlash,
+                            color: Colors.red,
+                          ),*/
+                          labelText: "Latitude",
+                          labelStyle: TextStyle(color: Colors.white),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 260,
+                      height: 60,
+                      child: TextField(
+                        enabled: false,
+                        controller: lngController,
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          /*suffix: Icon(
+                            FontAwesomeIcons.eyeSlash,
+                            color: Colors.red,
+                          ),*/
+                          labelText: "Longitude",
+                          labelStyle: TextStyle(color: Colors.white),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        registProcess();
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 10.0),
+                        alignment: Alignment.center,
+                        width: 250,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          color: Colors.white,
+                        ),
+                        child: TextButton(
+                          onPressed: () {},
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.all(12.0),
+                            minimumSize: Size(50, 30),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
                           child: Text(
                             'Register',
                             style: TextStyle(

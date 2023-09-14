@@ -148,6 +148,10 @@ class _CustomerCart extends State<CustomerCart> {
                           final jsona = country['produks'];
                           //final jsona = json.encode(country['produks']);
                           //log("${jsona[0]}");
+                          num totalharga = 0;
+                          var cartlat;
+                          var cartlng;
+                          var cartalamat;
                           return Card(
                               margin: const EdgeInsets.all(20),
                               child: Column(
@@ -186,6 +190,16 @@ class _CustomerCart extends State<CustomerCart> {
                                                       country['pnama'][index];
                                                   final jspharga =
                                                       country['pharga'][index];
+                                                  var hargaz =
+                                                      int.parse(jspharga);
+                                                  totalharga +=
+                                                      hargaz * jsjumlah;
+                                                  cartlat =
+                                                      country['dlat'][index];
+                                                  cartlng =
+                                                      country['dlng'][index];
+                                                  cartalamat =
+                                                      country['dalamat'][index];
                                                   return Card(
                                                     margin: const EdgeInsets
                                                             .symmetric(
@@ -253,6 +267,54 @@ class _CustomerCart extends State<CustomerCart> {
                                                             ],
                                                           ),
                                                         ),
+                                                        ListTile(
+                                                          title: RichText(
+                                                            selectionColor:
+                                                                Color(
+                                                                    0xFF2B9EA4),
+                                                            text: TextSpan(
+                                                              style: const TextStyle(
+                                                                  color: Color(
+                                                                      0xFF2B9EA4)),
+                                                              children: [
+                                                                TextSpan(
+                                                                    text:
+                                                                        "Energi : ${country['energi'][0]}\n"),
+                                                                TextSpan(
+                                                                    text:
+                                                                        "Water : ${country['water'][0]}\n"),
+                                                                TextSpan(
+                                                                    text:
+                                                                        "Protein : ${country['protein'][0]}\n"),
+                                                                TextSpan(
+                                                                    text:
+                                                                        "Fat : ${country['fat'][0]}\n"),
+                                                                TextSpan(
+                                                                    text:
+                                                                        "Karbohidrat : ${country['karbo'][0]}\n"),
+                                                                TextSpan(
+                                                                    text:
+                                                                        "Cholesterol : ${country['chr'][0]}\n"),
+                                                                TextSpan(
+                                                                    text:
+                                                                        "Vitamin A : ${country['vita'][0]}\n"),
+                                                                TextSpan(
+                                                                    text:
+                                                                        "Vitamin C : ${country['vitc'][0]}\n"),
+                                                                TextSpan(
+                                                                    text:
+                                                                        "Vitamin E : ${country['vite'][0]}\n"),
+                                                                TextSpan(
+                                                                    text:
+                                                                        "Magnesium : ${country['mag'][0]}\n"),
+                                                                TextSpan(
+                                                                    text:
+                                                                        "Sodium : ${country['sod'][0]}\n"),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          onTap: () {},
+                                                        ),
                                                       ],
                                                     ),
                                                   );
@@ -269,6 +331,10 @@ class _CustomerCart extends State<CustomerCart> {
                                                     'cart_ids':
                                                         country['produks'],
                                                     'shop_id': country['ids'],
+                                                    'totalharga': totalharga,
+                                                    'cartlat': cartlat,
+                                                    'cartlng': cartlng,
+                                                    'cartalamat': cartalamat,
                                                   },
                                                 ).then(onGoBack);
                                                 /*

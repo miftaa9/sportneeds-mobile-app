@@ -10,8 +10,9 @@ import 'package:strintcurrency/strintcurrency.dart';
 import 'package:intl/intl.dart';
 
 class CustomerCartCheckout extends StatefulWidget {
-  int totalsemua;
-  CustomerCartCheckout({this.totalsemua = 0});
+  const CustomerCartCheckout({Key? key}) : super(key: key);
+  //int totalsemua;
+  //CustomerCartCheckout({this.totalsemua = 0});
   @override
   State<CustomerCartCheckout> createState() => _CustomerCartCheckout();
 }
@@ -19,6 +20,7 @@ class CustomerCartCheckout extends StatefulWidget {
 class _CustomerCartCheckout extends State<CustomerCartCheckout> {
   late int totalsemua = 0;
   late int totalsemuab;
+  var _info = ["", "", ""];
   onGoBack(dynamic value) {
     setState(() {
       _CustomerCartCheckout();
@@ -38,16 +40,9 @@ class _CustomerCartCheckout extends State<CustomerCartCheckout> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      // do something
-      print("Build Completed");
-      setState(() {
-        totalsemuab = totalsemua;
-      });
-    });
   }
 
-  checkoutProcess(iduser, idcart, idtoko) async {
+  checkoutProcess(iduser, idcart, idtoko, totalharga) async {
     for (var idcartz in idcart) {
       await supabase
           .from('cart')
@@ -59,8 +54,14 @@ class _CustomerCartCheckout extends State<CustomerCartCheckout> {
       'idcart': idcart,
       'iduser': iduser,
       'status': 'waiting',
-      'datez': dateO
+      'datez': dateO,
+      'total': totalharga,
     });
+    await supabase.from('user_customer').update({
+      "latitude": _info[0],
+      "longitude": _info[1],
+      "map_alamat": _info[2],
+    }).eq('user_id', iduser);
     Fluttertoast.showToast(
       msg: 'Pesanan telah masuk ke Nutrishop',
       backgroundColor: Colors.green,
@@ -70,12 +71,30 @@ class _CustomerCartCheckout extends State<CustomerCartCheckout> {
     );
   }
 
+  void moveToSecondPage() async {
+    final information =
+        await Navigator.pushNamed(context, '/reg_nutrishop_lokasi');
+    log("$information");
+    updateInformation(information);
+  }
+
+  void updateInformation(information) {
+    setState(() => _info = information);
+  }
+
   @override
   Widget build(BuildContext context) {
     final arg = ModalRoute.of(context)!.settings.arguments as Map;
     final cids = arg["cart_ids"];
     final int shopid = arg["shop_id"];
     final int uid = arg["uid"];
+    final int totalharga = arg["totalharga"];
+    final cartlat = arg["cartlat"];
+    final cartlng = arg["cartlng"];
+    final cartalamat = arg["cartalamat"];
+    _info[0] = cartlat;
+    _info[1] = cartlng;
+    _info[2] = cartalamat;
     String totalsemuastr = totalsemua.toString();
     //final xfuture = supabase.from('cart').select<List<Map<String, dynamic>>>();
     return FutureBuilder<List>(
@@ -91,12 +110,6 @@ class _CustomerCartCheckout extends State<CustomerCartCheckout> {
               .from('cart')
               .select('id, jumlah, status, nutrishop_produk(id, nama,harga)')
               .in_('id', cids);
-
-          final dataalamat = supabase
-              .from('customer_alamat')
-              .select()
-              .eq('user_id', uid)
-              .single();
           return FutureBuilder(
               future: datacart,
               builder: (context, snapshot) {
@@ -105,6 +118,12 @@ class _CustomerCartCheckout extends State<CustomerCartCheckout> {
                 }
                 final countries = snapshot.data!;
                 totalsemua = 0;
+
+                final datacust = supabase
+                    .from('user_customer')
+                    .select()
+                    .eq('id', dat[3])
+                    .single();
                 return Scaffold(
                   backgroundColor: Color(0xFF2B9EA4),
                   appBar: const LayoutCustomerAppBar(
@@ -115,6 +134,50 @@ class _CustomerCartCheckout extends State<CustomerCartCheckout> {
                           ))),
                   body: Column(children: [
                     Expanded(
+                        flex: 1,
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(
+                              color: Colors.greenAccent,
+                            ),
+                            borderRadius:
+                                BorderRadius.circular(20.0), //<-- SEE HERE
+                          ),
+                          child: ListTile(
+                            title: RichText(
+                              selectionColor: Color(0xFF2B9EA4),
+                              text: TextSpan(
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF2B9EA4)),
+                                children: [
+                                  TextSpan(text: "Alamat : ${_info[2]}"),
+                                ],
+                              ),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Lat : ${_info[0]}"),
+                                Text("Lng : ${_info[1]}"),
+                              ],
+                            ),
+                            onTap: () {},
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                    onPressed: () {
+                                      moveToSecondPage();
+                                    },
+                                    icon: const Icon(Icons.add_location_alt),
+                                    color: Color(0xFF2B9EA4)),
+                              ],
+                            ),
+                          ),
+                        )),
+                    Expanded(
+                      flex: 5,
                       child: ListView.builder(
                         itemCount: countries.length,
                         itemBuilder: ((context, index) {
@@ -202,7 +265,7 @@ class _CustomerCartCheckout extends State<CustomerCartCheckout> {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.all(12.0),
-                                  child: Text("${totalsemua}",
+                                  child: Text("${totalharga}",
                                       style: TextStyle(
                                         color: Color(0xFF2B9EA4),
                                         fontSize: 30,
@@ -216,7 +279,7 @@ class _CustomerCartCheckout extends State<CustomerCartCheckout> {
                                 backgroundColor: const Color(0xFF2B9EA4),
                                 minimumSize: const Size.fromHeight(60)),
                             onPressed: () {
-                              checkoutProcess(uid, cids, shopid);
+                              checkoutProcess(uid, cids, shopid, totalharga);
 
                               Navigator.pop(context);
                             },

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:first_app/HomePage.dart';
@@ -19,30 +21,42 @@ class _Regist_Driver extends State<Regist_Driver> {
   TextEditingController alamatController = TextEditingController();
 
   Future registProcess() async {
-    final data = await supabase
-        .from('users')
-        .insert({
-          "email": emailController.text.toString(),
-          "pass": passController.text.toString(),
-          "level": 3,
-        })
-        .select()
-        .single();
-    final idu = data['id'];
-    await supabase.from('user_driver').insert({
-      "nama": namaController.text.toString(),
-      "notelp": notelpController.text.toString(),
-      "alamat": alamatController.text.toString(),
-      "user_id": idu,
-    });
-    Fluttertoast.showToast(
-      msg: 'Sukses pendaftaran',
-      backgroundColor: Colors.green,
-      textColor: Colors.white,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.TOP,
-    );
-    Navigator.pushNamed(context, '/login');
+    try {
+      final data = await supabase
+          .from('users')
+          .insert({
+            "email": emailController.text.toString(),
+            "pass": passController.text.toString(),
+            "level": 3,
+          })
+          .select()
+          .single();
+      final idu = data['id'];
+      log("$data");
+      await supabase.from('user_driver').insert({
+        "nama": namaController.text.toString(),
+        "notelp": notelpController.text.toString(),
+        "alamat": alamatController.text.toString(),
+        "user_id": idu,
+      });
+      Fluttertoast.showToast(
+        msg: 'Sukses pendaftaran',
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+      );
+      Navigator.pushNamed(context, '/login');
+    } on Exception catch (e) {
+      Fluttertoast.showToast(
+        msg: 'Email sudah dipakai!!!',
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+      );
+      print('error caught: $e');
+    }
   }
 
   @override
@@ -246,20 +260,25 @@ class _Regist_Driver extends State<Regist_Driver> {
                     const SizedBox(
                       height: 12,
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 10.0),
-                      alignment: Alignment.center,
-                      width: 250,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(50)),
-                        color: Colors.white,
-                      ),
-                      child: TextButton(
-                        onPressed: () {
-                          registProcess();
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.all(12.0),
+                    InkWell(
+                      onTap: () {
+                        registProcess();
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 10.0),
+                        alignment: Alignment.center,
+                        width: 250,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                          color: Colors.white,
+                        ),
+                        child: TextButton(
+                          onPressed: () {},
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.all(12.0),
+                            minimumSize: Size(50, 30),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
                           child: Text(
                             'Register',
                             style: TextStyle(

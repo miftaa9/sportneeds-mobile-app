@@ -8,15 +8,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:strintcurrency/strintcurrency.dart';
 
-class NutrishopPesananDetail extends StatefulWidget {
+class CustNutrisiDetail extends StatefulWidget {
   @override
-  State<NutrishopPesananDetail> createState() => _NutrishopPesananDetail();
+  State<CustNutrisiDetail> createState() => _CustNutrisiDetail();
 }
 
-class _NutrishopPesananDetail extends State<NutrishopPesananDetail> {
+class _CustNutrisiDetail extends State<CustNutrisiDetail> {
   onGoBack(dynamic value) {
     setState(() {
-      _NutrishopPesananDetail();
+      _CustNutrisiDetail();
     });
   }
 
@@ -41,8 +41,9 @@ class _NutrishopPesananDetail extends State<NutrishopPesananDetail> {
           .from('cart')
           .update({'status': 'process'}).match({'id': idcartz});
     }
-    await supabase.from('transaction').update(
-        {'status': 'process', 'statusdriver': 'cari'}).match({'id': idtrans});
+    await supabase
+        .from('transaction')
+        .update({'status': 'process'}).match({'id': idtrans});
     /*await supabase
         .from('transaction_process')
         .insert({'sid': idtoko, 'idcart': idcart});
@@ -61,13 +62,12 @@ class _NutrishopPesananDetail extends State<NutrishopPesananDetail> {
     final arg = ModalRoute.of(context)!.settings.arguments as Map;
     final tid = arg["tid"];
     final idcart = arg["idcart"];
-    log("$idcart");
-    final int uid = arg["uid"];
     final status = arg["status"];
 
     final datacart = supabase
         .from('cart')
-        .select('id, jumlah, status, nutrishop_produk(id, nama,harga)')
+        .select(
+            'id, jumlah, status, nutrishop_produk(id, nama,harga,img, energi, water, protein, fat, karbo, chr,vita,vitc,vite,mag,sod )')
         .in_('id', idcart);
     return FutureBuilder(
         future: datacart,
@@ -79,11 +79,12 @@ class _NutrishopPesananDetail extends State<NutrishopPesananDetail> {
           return Scaffold(
             backgroundColor: Color(0xFF2B9EA4),
             appBar: const LayoutCustomerAppBar(
-                title: Text('Detail Pesanan',
+                title: Text('Nutrisi Detail',
                     style: TextStyle(
                       fontSize: 34,
                       color: Color(0xFF2B9EA4),
                     ))),
+            bottomNavigationBar: LayoutCustomerBottomNav(),
             body: Column(children: [
               Expanded(
                 child: ListView.builder(
@@ -97,11 +98,10 @@ class _NutrishopPesananDetail extends State<NutrishopPesananDetail> {
                     countries[index]['total'] = total;
                     var totalStr = total.toString();
                     final strintcurrency = StrIntCurrency();
-                    /*final harga2 = strintcurrency.intToStringID(
-                              produk['harga'],
-                              symbol: false); */ // it returns "2,000,00"
-                    //final jsona = json.encode(country['produks']);
-                    //log("${jsona[0]}");
+
+                    final tesjpg = supabase.storage
+                        .from('shop_produk')
+                        .getPublicUrl(produk['img']);
                     return Card(
                       margin: const EdgeInsets.symmetric(
                           horizontal: 10.0, vertical: 2.0),
@@ -109,11 +109,6 @@ class _NutrishopPesananDetail extends State<NutrishopPesananDetail> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           ListTile(
-                            leading: const Icon(
-                              Icons.account_circle,
-                              size: 50,
-                              color: Color(0xFF2B9EA4),
-                            ),
                             title: RichText(
                               selectionColor: Color(0xFF2B9EA4),
                               text: TextSpan(
@@ -125,24 +120,40 @@ class _NutrishopPesananDetail extends State<NutrishopPesananDetail> {
                                 ],
                               ),
                             ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("@Harga : ${produk['harga']}"),
-                                Text("Jumlah : ${country['jumlah']}"),
-                              ],
+                            onTap: () {},
+                          ),
+                          ListTile(
+                            title: RichText(
+                              selectionColor: Color(0xFF2B9EA4),
+                              text: TextSpan(
+                                style:
+                                    const TextStyle(color: Color(0xFF2B9EA4)),
+                                children: [
+                                  TextSpan(
+                                      text: "Energi : ${produk['energi']}\n"),
+                                  TextSpan(
+                                      text: "Water : ${produk['water']}\n"),
+                                  TextSpan(
+                                      text: "Protein : ${produk['protein']}\n"),
+                                  TextSpan(text: "Fat : ${produk['fat']}\n"),
+                                  TextSpan(
+                                      text:
+                                          "Karbohidrat : ${produk['karbo']}\n"),
+                                  TextSpan(
+                                      text: "Cholesterol : ${produk['chr']}\n"),
+                                  TextSpan(
+                                      text: "Vitamin A : ${produk['vita']}\n"),
+                                  TextSpan(
+                                      text: "Vitamin C : ${produk['vitc']}\n"),
+                                  TextSpan(
+                                      text: "Vitamin E : ${produk['vite']}\n"),
+                                  TextSpan(
+                                      text: "Magnesium : ${produk['mag']}\n"),
+                                  TextSpan(text: "Sodium : ${produk['sod']}\n"),
+                                ],
+                              ),
                             ),
                             onTap: () {},
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(totalStr,
-                                    style: TextStyle(
-                                      color: Color(0xFF2B9EA4),
-                                      fontSize: 20,
-                                    )),
-                              ],
-                            ),
                           ),
                         ],
                       ),
@@ -151,34 +162,6 @@ class _NutrishopPesananDetail extends State<NutrishopPesananDetail> {
                 ),
               ),
             ]),
-            bottomNavigationBar: BottomAppBar(
-              child: Container(
-                height: 150,
-                child: Column(
-                  children: <Widget>[
-                    if (status == 'waiting') ...[
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            // The width will be 100% of the parent widget
-                            // The height will be 60
-                            backgroundColor: Colors.white,
-                            minimumSize: const Size.fromHeight(60)),
-                        onPressed: () {
-                          terimaProcess(uid, idcart, tid);
-
-                          Navigator.pop(context);
-                        },
-                        child: const Text("Terima",
-                            style: TextStyle(
-                              color: Color(0xFF2B9EA4),
-                              fontSize: 30,
-                            )),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ),
           );
         });
   }

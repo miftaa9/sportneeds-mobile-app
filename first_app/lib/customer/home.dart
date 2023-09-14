@@ -131,7 +131,9 @@ class _Customer_Home extends State<Customer_Home> {
                   elevation: 5,
                   margin: EdgeInsets.all(10),
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, '/customer_nutrisi');
+                    },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [

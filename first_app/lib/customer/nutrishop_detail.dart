@@ -42,6 +42,9 @@ class _CustomerShopDetail extends State<CustomerShopDetail> {
             itemCount: countries.length,
             itemBuilder: ((context, index) {
               final country = countries[index];
+              final tesjpg = supabase.storage
+                  .from('shop_produk')
+                  .getPublicUrl(country['img']);
               return Card(
                 margin:
                     const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
@@ -49,11 +52,7 @@ class _CustomerShopDetail extends State<CustomerShopDetail> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     ListTile(
-                      leading: const Icon(
-                        Icons.account_circle,
-                        size: 50,
-                        color: Color(0xFF2B9EA4),
-                      ),
+                      leading: Image.network(tesjpg),
                       title: RichText(
                         selectionColor: Color(0xFF2B9EA4),
                         text: TextSpan(

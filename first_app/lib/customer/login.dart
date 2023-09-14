@@ -70,6 +70,13 @@ class _Login extends State<Login> {
         } else if (a['level'] == 3) {
           tablenama = 'user_driver';
           redirect = '/driver_home';
+        } else if (a['level'] == 999) {
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setInt('userid', a['id']);
+          await prefs.setString('usernama', 'admin');
+          await prefs.setBool('active', true);
+          await prefs.setString('email', 'admin');
+          Navigator.pushNamed(context, '/admin_home');
         }
         final datacust = await supabase
             .from(tablenama)

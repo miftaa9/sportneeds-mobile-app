@@ -5,6 +5,37 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
 
+class Transaction {
+  Transaction(
+      {required this.id,
+      required this.idcart,
+      required this.status,
+      required this.sid,
+      required this.iduser,
+      required this.driver_id,
+      required this.createdAt});
+
+  final int id;
+
+  final idcart;
+  final status;
+  final int sid;
+  final int iduser;
+  final int driver_id;
+
+  final DateTime createdAt;
+
+  Transaction.fromMap({
+    required Map<String, dynamic> map,
+  })  : id = map['id'],
+        idcart = map['idcart'],
+        status = map['status'],
+        sid = map['sid'],
+        iduser = map['iduser'],
+        driver_id = map['driver_id'],
+        createdAt = DateTime.parse(map['created_at']);
+}
+
 class DriverHome extends StatefulWidget {
   const DriverHome({Key? key}) : super(key: key);
   static Route<void> route() {
@@ -19,11 +50,26 @@ class DriverHome extends StatefulWidget {
 
 class _DriverHome extends State<DriverHome> {
   int _selectedIndex = 0;
-  int useraktifs = 0;
+  //int useraktifs = 0;
   bool useraktif = false;
+  int carijob = 0;
 
   void initState() {
     super.initState();
+  }
+
+  void _changeAktif(bool index) {
+    setState(() {
+      useraktif = index;
+      carijob = 0;
+    });
+  }
+
+  statAutoAktif(dynamic value) {
+    setState(() {
+      useraktif = true;
+      carijob = 0;
+    });
   }
 
   Future<List> getUserNamePref() async {
@@ -36,9 +82,12 @@ class _DriverHome extends State<DriverHome> {
     ];
   }
 
-  final _future = Supabase.instance.client
-      .from('user_customer')
-      .select<List<Map<String, dynamic>>>();
+  late final Stream<List<Transaction>> _messagesStream = supabase
+      .from('transaction')
+      .stream(primaryKey: ['id'])
+      .eq('statusdriver', 'cari')
+      .order('created_at')
+      .map((maps) => maps.map((map) => Transaction.fromMap(map: map)).toList());
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +99,6 @@ class _DriverHome extends State<DriverHome> {
           }
           final dat = snapshot.data!;
 
-          if (useraktifs == 0) {
-            useraktif = dat[2];
-            useraktifs = 1;
-          }
           return Scaffold(
               backgroundColor: Color(0xFF2B9EA4),
               appBar: AppBar(
@@ -91,44 +136,6 @@ class _DriverHome extends State<DriverHome> {
                     IconThemeData(color: Color(0xFF2B9EA4), size: 36),
                 toolbarHeight: 80, // default is 56
               ),
-              bottomNavigationBar: BottomNavigationBar(
-                iconSize: 40,
-                selectedIconTheme:
-                    IconThemeData(color: Colors.amberAccent, size: 40),
-                selectedItemColor: Colors.amberAccent,
-                showSelectedLabels: false,
-                showUnselectedLabels: false,
-                currentIndex: _selectedIndex,
-                unselectedItemColor: Colors.grey,
-                onTap: (index) {
-                  switch (index) {
-                    case 0:
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, "/driver_home", (r) => false);
-                      break;
-                    case 1:
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, "/nutrisionis_profile", (r) => false);
-                      break;
-                  }
-                },
-                items: const <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: ImageIcon(
-                      AssetImage("asset/images/b/pesan.png"),
-                      color: Color(0xFF2B9EA4),
-                    ),
-                    label: 'Home',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: ImageIcon(
-                      AssetImage("asset/images/b/akun.png"),
-                      color: Color(0xFF2B9EA4),
-                    ),
-                    label: 'Profile',
-                  ),
-                ],
-              ),
               body: Column(
                 children: <Widget>[
                   Expanded(
@@ -145,7 +152,7 @@ class _DriverHome extends State<DriverHome> {
                             title: Padding(
                                 padding: EdgeInsets.all(14.0),
                                 child: Text(
-                                  'Status',
+                                  'Mulai Bekerja?',
                                   style: TextStyle(
                                       fontSize: 25,
                                       fontWeight: FontWeight.bold),
@@ -156,70 +163,261 @@ class _DriverHome extends State<DriverHome> {
                               activeColor: Colors.deepPurple,
                               // trackColor: ,
 
-                              onChanged: (value) {},
+                              onChanged: (value) {
+                                _changeAktif(value);
+                              },
                             )),
                       )),
-                  Expanded(
-                    flex: 9,
-                    child: FutureBuilder<List<Map<String, dynamic>>>(
-                      future: _future,
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-                        final countries = snapshot.data!;
-                        return ListView.builder(
-                          itemCount: countries.length,
-                          itemBuilder: ((context, index) {
-                            final country = countries[index];
-                            return Card(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 10.0, vertical: 2.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  ListTile(
-                                    leading: const Icon(
-                                      Icons.account_circle,
-                                      size: 50,
-                                      color: Color(0xFF2B9EA4),
-                                    ),
-                                    title: RichText(
-                                      selectionColor: Color(0xFF2B9EA4),
-                                      text: TextSpan(
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xFF2B9EA4)),
-                                        children: [
-                                          TextSpan(
-                                            text: country['nama'],
+                  if (useraktif) ...[
+                    Expanded(
+                      flex: 9,
+                      child: Card(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 2.0),
+                          child: StreamBuilder<List<Transaction>>(
+                            stream: _messagesStream,
+                            builder: (context, snapshot2) {
+                              if (snapshot2.data == null) {
+                                return Center(
+                                    child: Container(
+                                  color: Colors.white,
+                                  child: LayoutBuilder(
+                                      builder: (context, constraint) {
+                                    return Icon(Icons.search,
+                                        size: constraint.biggest.width);
+                                  }),
+                                ));
+                              }
+                              final countries = snapshot2.data!;
+                              return ListView.builder(
+                                itemCount: countries.length,
+                                itemBuilder: ((context, index) {
+                                  final country = countries[index];
+                                  log("$country");
+                                  log("ew ${carijob}");
+                                  if (country.driver_id == 0) {
+                                    carijob = 1;
+                                    log("dr ${country.driver_id}");
+                                    return dewaAlert(
+                                        uid: country.iduser,
+                                        sid: country.sid,
+                                        id: country.id,
+                                        idcart: country.idcart,
+                                        drid: dat[3]);
+
+                                    /*
+                                    return Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        ListTile(
+                                          leading: const Icon(
+                                            Icons.account_circle,
+                                            size: 50,
+                                            color: Color(0xFF2B9EA4),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    subtitle: Text(country['alamat']),
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        '/nutrisionis_konsultasi_show',
-                                        arguments: {
-                                          'customer_id': country['user_id'],
-                                          'nama': country['nama'],
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
-                        );
-                      },
+                                          title: RichText(
+                                            selectionColor: Color(0xFF2B9EA4),
+                                            text: TextSpan(
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF2B9EA4)),
+                                              children: [
+                                                TextSpan(
+                                                  text: "${country.sid}",
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          subtitle: Text("${country.iduser}"),
+                                          onTap: () {},
+                                        ),
+                                      ],
+                                    );*/
+                                  } else {
+                                    return null;
+                                  }
+                                }),
+                              );
+                            },
+                          )),
                     ),
-                  ),
+                  ] else ...[
+                    Expanded(flex: 9, child: Text('ddd'))
+                  ]
                 ],
               ));
+        });
+  }
+}
+
+class dewaAlert extends StatefulWidget {
+  final int uid;
+  final int sid;
+  final int id;
+  final int drid;
+  final idcart;
+  const dewaAlert({
+    Key? key,
+    required this.uid,
+    required this.sid,
+    required this.id,
+    required this.drid,
+    required this.idcart,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _dewaAlert();
+  }
+}
+
+class _dewaAlert extends State<dewaAlert> {
+  void initState() {
+    super.initState();
+  }
+
+  void ambilJob(id, driverid) async {
+    await supabase.from('transaction').update({
+      "driver_id": driverid,
+      "statusdriver": "pickup",
+    }).eq('id', id);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var dtshop = supabase
+        .from("user_nutrishop")
+        .select<List<Map<String, dynamic>>>()
+        .eq('user_id', widget.sid);
+
+    var dtcust = supabase
+        .from("user_customer")
+        .select<List<Map<String, dynamic>>>()
+        .eq('user_id', widget.uid);
+    return FutureBuilder<List<Map<String, dynamic>>>(
+        future: dtshop,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final dat1 = snapshot.data!;
+
+          return FutureBuilder<List<Map<String, dynamic>>>(
+              future: dtcust,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final dat2 = snapshot.data!;
+
+                log("d $dat1");
+                log("e $dat2");
+
+                return AlertDialog(
+                    title: const Text('Pesanan Baru'),
+                    content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Ongkir: Rp. 25.000",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 25,
+                              //color: Colors.red,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Icon(
+                            Icons.food_bank,
+                            size: 30,
+                            color: Color(0xFF2B9EA4),
+                          ),
+                          Text(
+                            "${dat1[0]['namatoko']}",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 25,
+                            ),
+                          ),
+                          Text(
+                            "${dat1[0]['alamat']}",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Icon(
+                            Icons.account_circle,
+                            size: 30,
+                            color: Color(0xFF2B9EA4),
+                          ),
+                          Text(
+                            "${dat2[0]['nama']}",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 25,
+                            ),
+                          ),
+                          Text(
+                            "${dat2[0]['map_alamat']}",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                        ]),
+                    actions: <Widget>[
+                      /*TextButton(
+                                            style: TextButton.styleFrom(
+                                              textStyle: Theme.of(context)
+                                                  .textTheme
+                                                  .labelLarge,
+                                            ),
+                                            child: const Text('Disable'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),*/
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color(0xFF2B9EA4)),
+                          padding: MaterialStateProperty.all<EdgeInsets>(
+                              EdgeInsets.all(10)),
+                        ),
+                        child: const Text(
+                          'Terima',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () {
+                          ambilJob(widget.id, widget.drid);
+                          Navigator.pushNamed(
+                            context,
+                            '/driver_map',
+                            arguments: {
+                              'shopLat': dat1[0]['latitude'],
+                              'shopLon': dat1[0]['longitude'],
+                              'custLat': dat2[0]['latitude'],
+                              'custLon': dat2[0]['longitude'],
+                              'shopDat': dat1,
+                              'custDat': dat2,
+                              'tid': widget.id,
+                              'idcart': widget.idcart
+                            },
+                          );
+                        },
+                      ),
+                    ]);
+              });
         });
   }
 }

@@ -9,18 +9,18 @@ import 'package:intl/intl.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 import 'package:first_app/main.dart';
 
-class MyHomePage extends StatefulWidget {
+class CustNutrisi extends StatefulWidget {
   // ------------------------------- CONSTRUCTORS ------------------------------
-  const MyHomePage({
+  const CustNutrisi({
     Key? key,
   }) : super(key: key);
 
   // --------------------------------- METHODS ---------------------------------
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<CustNutrisi> createState() => _CustNutrisi();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _CustNutrisi extends State<CustNutrisi> {
   DateTime _selectedValue = DateTime.now();
   List<DateTime> currentMonthList = List.empty();
 
@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         backgroundColor: Color(0xFF2B9EA4),
         appBar: const LayoutCustomerAppBar(
-            title: Text('Kalender Riwayat',
+            title: Text('kalori',
                 style: TextStyle(
                   fontSize: 34,
                   color: Color(0xFF2B9EA4),
@@ -123,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     //terimaProcess(mid,message.idcart);
                                     Navigator.pushNamed(
                                       context,
-                                      '/customer_riwayat_detail',
+                                      '/customer_nutrisi_detail',
                                       arguments: {
                                         'tid': country['id'],
                                         'idcart': country['idcart'],

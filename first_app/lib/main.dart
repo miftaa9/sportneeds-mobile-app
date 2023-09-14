@@ -1,17 +1,27 @@
+import 'package:first_app/admin/edit.dart';
+import 'package:first_app/admin/home.dart';
 import 'package:first_app/customer/cart.dart';
 import 'package:first_app/customer/cart_checkout.dart';
 import 'package:first_app/customer/cust_riwaya.dart';
 import 'package:first_app/customer/cust_riwayat_detail.dart';
 import 'package:first_app/customer/nutrishop_addcart.dart';
 import 'package:first_app/customer/nutrishop_detail.dart';
-import 'package:first_app/partner/driver.dart';
+import 'package:first_app/customer/nutrisi.dart';
+import 'package:first_app/customer/nutrisi_detail.dart';
+import 'package:first_app/customer/profile.dart';
+import 'package:first_app/partner/driver_home.dart';
+import 'package:first_app/partner/driver_map.dart';
+import 'package:first_app/partner/driver_map2.dart';
 import 'package:first_app/partner/nutrishop_home.dart';
+import 'package:first_app/partner/nutrishop_pendapatan.dart';
 import 'package:first_app/partner/nutrishop_pesandetail.dart';
 import 'package:first_app/partner/nutrishop_produk.dart';
 import 'package:first_app/partner/nutrishop_produk_add.dart';
+import 'package:first_app/partner/nutrishop_profile.dart';
 import 'package:first_app/partner/nutrisionis_chat.dart';
 import 'package:first_app/partner/nutrisionis_home.dart';
 import 'package:first_app/partner/nutrisionis_profile.dart';
+import 'package:first_app/partner/regist_nutrishop_lokasi.dart';
 import 'package:first_app/partner/tes.dart';
 import 'package:first_app/partner/tes2.dart';
 import 'package:first_app/partner/tes3.dart';
@@ -85,9 +95,13 @@ class MyApp extends StatelessWidget {
         '/customer_cart_checkout': (_) => CustomerCartCheckout(),
         '/customer_konsultasi': (_) => CustomerKonsultasi(),
         '/customer_konsultasi_show': (_) => CustomerKonsultasiShow(),
+        '/customer_nutrisi': (_) => CustNutrisi(),
+        '/customer_nutrisi_detail': (_) => CustNutrisiDetail(),
+        '/customer_profile': (_) => CustomerProfile(),
         '/menu_registrasi': (_) => Menu_Registrasi(),
         '/reg_driver': (_) => Regist_Driver(),
         '/reg_nutrishop': (_) => Regist_Nutrishop(),
+        '/reg_nutrishop_lokasi': (_) => Regist_Nutrishop_lokasi(),
         '/reg_nutrisionis': (_) => Regist_Nutrisionis(),
         '/nutrisionis_home': (_) => NutrisionisHome(),
         '/nutrisionis_konsultasi_show': (_) => NutrisionisChat(),
@@ -96,10 +110,16 @@ class MyApp extends StatelessWidget {
         '/nutrishop_pesandetail': (_) => NutrishopPesananDetail(),
         '/nutrishop_produk': (_) => NutrishopProduk(),
         '/nutrishop_produk_add': (_) => NutrishopAdd(),
+        '/nutrishop_profile': (_) => NutrishopProfile(),
+        '/nutrishop_pendapatan': (_) => shopPendapatan(),
         '/driver_home': (_) => DriverHome(),
+        '/driver_map': (_) => DriverMap(),
+        '/driver_map2': (_) => DriverMap2(),
+        '/admin_home': (_) => AdminHome(),
+        '/admin_edit': (_) => AdminEdit(),
         //'/driver_home': (_) => HomeScreen(),
-        //'/driver_tes': (_) => GeoMapPage(),
-        '/driver_tes': (_) => ListenLocationWidget(),
+        //'/driver_home': (_) => GeoMapPage(),
+        //'/driver_tes': (_) => ListenLocationWidget(),
       },
     );
   }

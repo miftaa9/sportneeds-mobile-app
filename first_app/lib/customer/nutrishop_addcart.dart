@@ -48,6 +48,8 @@ class _CustomerShopAddcart extends State<CustomerShopAddcart> {
     final int pid = arg["produk_id"];
     final String namatoko = arg["namatoko"];
     final all = arg["data"];
+    final tesjpg =
+        supabase.storage.from('shop_produk').getPublicUrl(all['img']);
 
     return Scaffold(
       backgroundColor: Color(0xFF2B9EA4),
@@ -63,7 +65,7 @@ class _CustomerShopAddcart extends State<CustomerShopAddcart> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Image.network(all['img']),
+              Image.network(tesjpg, height: 100),
               //Image.asset('asset/images/b/edukasi.png'),
               Container(
                   margin: EdgeInsets.all(30),

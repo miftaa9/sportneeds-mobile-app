@@ -31,7 +31,7 @@ class LayoutCustomerBottomNav extends StatelessWidget
             break;
           case 2:
             Navigator.pushNamedAndRemoveUntil(
-                context, "/customer_home", (r) => false);
+                context, "/customer_profile", (r) => false);
             break;
         }
       },

@@ -224,6 +224,46 @@ class _NutrishopHome extends State<NutrishopHome> {
                             return Column(
                               children: [
                                 Expanded(
+                                    flex: 1,
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                          color: Colors.greenAccent,
+                                        ),
+                                        borderRadius: BorderRadius.circular(
+                                            20.0), //<-- SEE HERE
+                                      ),
+                                      child: CupertinoListTile(
+                                        title: Padding(
+                                            padding: EdgeInsets.all(14.0),
+                                            child: Text(
+                                              'Pendapatan',
+                                              style: TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold),
+                                            )),
+                                        trailing: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IconButton(
+                                                onPressed: () {
+                                                  Navigator.pushNamed(
+                                                    context,
+                                                    '/nutrishop_pendapatan',
+                                                    arguments: {
+                                                      'sid': dat[3],
+                                                    },
+                                                  );
+                                                },
+                                                icon: const Icon(
+                                                    Icons.arrow_forward_ios),
+                                                color: Color(0xFF2B9EA4)),
+                                          ],
+                                        ),
+                                      ),
+                                    )),
+                                Expanded(
+                                  flex: 9,
                                   child: messages == null
                                       ? const Center(
                                           child: Text(
@@ -243,84 +283,93 @@ class _NutrishopHome extends State<NutrishopHome> {
                                             if (message.status == 'process') {
                                               aa = 'Menunggu Selesai';
                                             }
-                                            return Card(
-                                              margin:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10.0,
-                                                      vertical: 2.0),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: <Widget>[
-                                                  ListTile(
-                                                    /*leading: const Icon(
+                                            if (message.status == 'process' ||
+                                                message.status == 'waiting') {
+                                              return Card(
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10.0,
+                                                        vertical: 2.0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: <Widget>[
+                                                    ListTile(
+                                                      /*leading: const Icon(
                                                       Icons.account_circle,
                                                       size: 50,
                                                       color: Color(0xFF2B9EA4),
                                                     ),*/
-                                                    title: RichText(
-                                                      selectionColor:
-                                                          Color(0xFF2B9EA4),
-                                                      text: TextSpan(
-                                                        style: const TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Color(
-                                                                0xFF2B9EA4)),
-                                                        children: [
-                                                          TextSpan(
-                                                            text:
-                                                                '$aa' /*message[
+                                                      title: RichText(
+                                                        selectionColor:
+                                                            Color(0xFF2B9EA4),
+                                                        text: TextSpan(
+                                                          style: const TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: Color(
+                                                                  0xFF2B9EA4)),
+                                                          children: [
+                                                            TextSpan(
+                                                              text:
+                                                                  '$aa' /*message[
                                                                       'sid']*/
-                                                            ,
+                                                              ,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      onTap: () {},
+                                                      trailing: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              //terimaProcess(mid,message.idcart);
+                                                              Navigator
+                                                                  .pushNamed(
+                                                                context,
+                                                                '/nutrishop_pesandetail',
+                                                                arguments: {
+                                                                  'uid': dat[3],
+                                                                  'tid': mid,
+                                                                  'idcart':
+                                                                      message
+                                                                          .idcart,
+                                                                  'status':
+                                                                      message
+                                                                          .status
+                                                                },
+                                                              );
+                                                            },
+                                                            child:
+                                                                const Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(
+                                                                          12.0),
+                                                              child: Text(
+                                                                'Lihat',
+                                                                style: TextStyle(
+                                                                    color: Color(
+                                                                        0xFF2B9EA4),
+                                                                    fontSize:
+                                                                        20,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ),
                                                           ),
                                                         ],
                                                       ),
                                                     ),
-                                                    onTap: () {},
-                                                    trailing: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            //terimaProcess(mid,message.idcart);
-                                                            Navigator.pushNamed(
-                                                              context,
-                                                              '/nutrishop_pesandetail',
-                                                              arguments: {
-                                                                'uid': dat[3],
-                                                                'tid': mid,
-                                                                'idcart':
-                                                                    message
-                                                                        .idcart,
-                                                                'status':
-                                                                    message
-                                                                        .status
-                                                              },
-                                                            );
-                                                          },
-                                                          child: const Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    12.0),
-                                                            child: Text(
-                                                              'Lihat',
-                                                              style: TextStyle(
-                                                                  color: Color(
-                                                                      0xFF2B9EA4),
-                                                                  fontSize: 20,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
+                                                  ],
+                                                ),
+                                              );
+                                            }
                                           },
                                         ),
                                 ),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,6 +8,7 @@ class First extends StatelessWidget {
   void click() {}
   @override
   Widget build(BuildContext context) {
+    log("dewa");
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(

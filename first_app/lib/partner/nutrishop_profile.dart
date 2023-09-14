@@ -1,23 +1,20 @@
-import 'package:first_app/layout/customerBottomNav.dart';
 import 'package:first_app/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:responsive_grid/responsive_grid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
-class NutrisionisProfile extends StatefulWidget {
+class NutrishopProfile extends StatefulWidget {
   @override
-  _NutrisionisProfile createState() => _NutrisionisProfile();
+  State<StatefulWidget> createState() => _NutrishopProfile();
 }
 
-class _NutrisionisProfile extends State<NutrisionisProfile> {
+class _NutrishopProfile extends State<NutrishopProfile> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
   TextEditingController namaController = TextEditingController();
   TextEditingController notelpController = TextEditingController();
-  TextEditingController alamatController = TextEditingController();
+  TextEditingController namatokoController = TextEditingController();
   int _selectedIndex = 0;
   var ccc = 0;
   //String nama = '';
@@ -46,10 +43,10 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
     await supabase.from('users').update({
       "pass": passController.text.toString(),
     }).eq('id', id);
-    await supabase.from('user_nutrisionis').update({
+    await supabase.from('user_nutrishop').update({
       "nama": namaController.text.toString(),
       "notelp": notelpController.text.toString(),
-      "alamat": alamatController.text.toString(),
+      "namatoko": namatokoController.text.toString(),
     }).eq('user_id', id);
     Fluttertoast.showToast(
       msg: 'Profile sukses di-update',
@@ -76,7 +73,7 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
             supabase.from('users').select().eq('id', dat[3]).single();
 
         final dtcust = supabase
-            .from('user_nutrisionis')
+            .from('user_nutrishop')
             .select()
             .eq('user_id', dat[3])
             .single();
@@ -102,7 +99,7 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
                       passController.text = datUser['pass'];
                       namaController.text = datCust['nama'];
                       notelpController.text = datCust['notelp'];
-                      alamatController.text = datCust['alamat'];
+                      namatokoController.text = datCust['namatoko'];
                       ccc = 1;
                     }
 
@@ -238,6 +235,34 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
                                       width: 260,
                                       height: 60,
                                       child: TextField(
+                                        controller: namatokoController,
+                                        style: TextStyle(color: Colors.white),
+                                        decoration: const InputDecoration(
+                                          labelText: "Nama Toko",
+                                          labelStyle:
+                                              TextStyle(color: Colors.white),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.white),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8)),
+                                          ),
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.white),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8)),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 12,
+                                    ),
+                                    Container(
+                                      width: 260,
+                                      height: 60,
+                                      child: TextField(
                                         controller: namaController,
                                         style: TextStyle(color: Colors.white),
                                         decoration: const InputDecoration(
@@ -245,7 +270,7 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
                             FontAwesomeIcons.eyeSlash,
                             color: Colors.red,
                           ),*/
-                                          labelText: "Nama",
+                                          labelText: "Nama Pemilik",
                                           labelStyle:
                                               TextStyle(color: Colors.white),
                                           focusedBorder: OutlineInputBorder(
@@ -278,38 +303,6 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
                             color: Colors.red,
                           ),*/
                                           labelText: "No Telp",
-                                          labelStyle:
-                                              TextStyle(color: Colors.white),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: Colors.white),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8)),
-                                          ),
-                                          enabledBorder: UnderlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: Colors.white),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8)),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 12,
-                                    ),
-                                    Container(
-                                      width: 260,
-                                      height: 60,
-                                      child: TextField(
-                                        controller: alamatController,
-                                        style: TextStyle(color: Colors.white),
-                                        decoration: const InputDecoration(
-                                          /*suffix: Icon(
-                            FontAwesomeIcons.eyeSlash,
-                            color: Colors.red,
-                          ),*/
-                                          labelText: "Alamat",
                                           labelStyle:
                                               TextStyle(color: Colors.white),
                                           focusedBorder: OutlineInputBorder(
@@ -378,21 +371,32 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
                           switch (index) {
                             case 0:
                               Navigator.pushNamedAndRemoveUntil(
-                                  context, "/nutrisionis_home", (r) => false);
+                                  context, "/nutrishop_home", (r) => false);
                               break;
                             case 1:
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  "/nutrisionis_profile", (r) => false);
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, "/nutrishop_produk", (r) => false);
+                              break;
+                            case 2:
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, "/nutrishop_profile", (r) => false);
                               break;
                           }
                         },
                         items: const <BottomNavigationBarItem>[
                           BottomNavigationBarItem(
                             icon: ImageIcon(
-                              AssetImage("asset/images/b/pesan.png"),
+                              AssetImage("asset/images/b/pesanan-partners.png"),
                               color: Color(0xFF2B9EA4),
                             ),
                             label: 'Home',
+                          ),
+                          BottomNavigationBarItem(
+                            icon: ImageIcon(
+                              AssetImage("asset/images/b/produk-saya.png"),
+                              color: Color(0xFF2B9EA4),
+                            ),
+                            label: 'Cart',
                           ),
                           BottomNavigationBarItem(
                             icon: ImageIcon(

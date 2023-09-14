@@ -7,18 +7,17 @@ import 'package:responsive_grid/responsive_grid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
-class NutrisionisProfile extends StatefulWidget {
+class CustomerProfile extends StatefulWidget {
   @override
-  _NutrisionisProfile createState() => _NutrisionisProfile();
+  _CustomerProfile createState() => _CustomerProfile();
 }
 
-class _NutrisionisProfile extends State<NutrisionisProfile> {
+class _CustomerProfile extends State<CustomerProfile> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
   TextEditingController namaController = TextEditingController();
   TextEditingController notelpController = TextEditingController();
   TextEditingController alamatController = TextEditingController();
-  int _selectedIndex = 0;
   var ccc = 0;
   //String nama = '';
   @override
@@ -46,7 +45,7 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
     await supabase.from('users').update({
       "pass": passController.text.toString(),
     }).eq('id', id);
-    await supabase.from('user_nutrisionis').update({
+    await supabase.from('user_customer').update({
       "nama": namaController.text.toString(),
       "notelp": notelpController.text.toString(),
       "alamat": alamatController.text.toString(),
@@ -76,7 +75,7 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
             supabase.from('users').select().eq('id', dat[3]).single();
 
         final dtcust = supabase
-            .from('user_nutrisionis')
+            .from('user_customer')
             .select()
             .eq('user_id', dat[3])
             .single();
@@ -365,44 +364,7 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
                           ),
                         ),
                       ),
-                      bottomNavigationBar: BottomNavigationBar(
-                        iconSize: 40,
-                        selectedIconTheme:
-                            IconThemeData(color: Colors.amberAccent, size: 40),
-                        selectedItemColor: Colors.amberAccent,
-                        showSelectedLabels: false,
-                        showUnselectedLabels: false,
-                        currentIndex: _selectedIndex,
-                        unselectedItemColor: Colors.grey,
-                        onTap: (index) {
-                          switch (index) {
-                            case 0:
-                              Navigator.pushNamedAndRemoveUntil(
-                                  context, "/nutrisionis_home", (r) => false);
-                              break;
-                            case 1:
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  "/nutrisionis_profile", (r) => false);
-                              break;
-                          }
-                        },
-                        items: const <BottomNavigationBarItem>[
-                          BottomNavigationBarItem(
-                            icon: ImageIcon(
-                              AssetImage("asset/images/b/pesan.png"),
-                              color: Color(0xFF2B9EA4),
-                            ),
-                            label: 'Home',
-                          ),
-                          BottomNavigationBarItem(
-                            icon: ImageIcon(
-                              AssetImage("asset/images/b/akun.png"),
-                              color: Color(0xFF2B9EA4),
-                            ),
-                            label: 'Profile',
-                          ),
-                        ],
-                      ),
+                      bottomNavigationBar: LayoutCustomerBottomNav(),
                     );
                   });
             });

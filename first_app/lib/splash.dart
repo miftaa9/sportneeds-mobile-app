@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -25,7 +26,8 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    getLocation();
+    //getLocation();
+    dkrhLoc();
     _redirect();
   }
 
@@ -46,6 +48,7 @@ class _SplashPageState extends State<SplashPage> {
     permissionGranted = await lokasi.hasPermission();
     if (permissionGranted == locationv2.PermissionStatus.denied) {
       permissionGranted = await lokasi.requestPermission();
+      log("$permissionGranted");
       if (permissionGranted != locationv2.PermissionStatus.granted) {
         return false;
       }
@@ -97,6 +100,33 @@ class _SplashPageState extends State<SplashPage> {
     }
   }
 
+  Future<void> dkrhLoc() async {
+    locationv2.Location location = locationv2.Location();
+
+    bool _serviceEnabled;
+    locationv2.PermissionStatus _permissionGranted;
+    locationv2.LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == locationv2.PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != locationv2.PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    //_locationData = await location.getLocation();
+    //log("$_locationData");
+  }
+
   Future<void> _redirect() async {
     await Future.delayed(Duration.zero);
     if (!mounted) {
@@ -107,18 +137,48 @@ class _SplashPageState extends State<SplashPage> {
     if (session != null && _isLoading == false) {
       Navigator.pushNamed(context, '/customer_home');
     } else {
-      Navigator.pushNamed(context, '/first');
+      Timer(const Duration(seconds: 3),
+          () => Navigator.pushNamed(context, '/first'));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          color: Colors.white,
         ),
-      ), // this is the main reason of transparency at next screen. I am ignoring rest implementation but what i have achieved is you can see.
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Column(
+              children: [
+                Image.asset(
+                  "asset/images/logo.jpg",
+                  height: 300.0,
+                  width: 300.0,
+                ),
+                const Text(
+                  "Home Delivery Partner",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
+                  ),
+                ),
+              ],
+            ),
+            const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

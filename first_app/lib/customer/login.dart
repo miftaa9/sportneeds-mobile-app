@@ -27,6 +27,7 @@ class _Login extends State<Login> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
   bool _isLoading = false;
+  bool _isObscure = true;
 
   Future<void> _signIn() async {
     setState(() {
@@ -76,6 +77,7 @@ class _Login extends State<Login> {
           await prefs.setString('usernama', 'admin');
           await prefs.setBool('active', true);
           await prefs.setString('email', 'admin');
+          await prefs.setString('pic', a['pic']);
           Navigator.pushNamed(context, '/admin_home');
         }
         final datacust = await supabase
@@ -83,11 +85,16 @@ class _Login extends State<Login> {
             .select()
             .eq('user_id', a['id'])
             .single();
+        var ppic = a['pic'];
+        if (a['pic'] == null) {
+          ppic = '';
+        }
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setInt('userid', a['id']);
         await prefs.setString('usernama', datacust['nama']);
         await prefs.setBool('active', datacust['active']);
         await prefs.setString('email', a['email']);
+        await prefs.setString('pic', ppic);
         Navigator.pushNamed(context, redirect);
       }
     }
@@ -220,8 +227,19 @@ class _Login extends State<Login> {
                       child: TextField(
                         controller: passController,
                         style: const TextStyle(color: Colors.white),
-                        obscureText: true,
-                        decoration: const InputDecoration(
+                        obscureText: _isObscure,
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                                  _isObscure
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.black),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              }),
                           /*suffix: Icon(
                             FontAwesomeIcons.eyeSlash,
                             color: Colors.red,

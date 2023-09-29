@@ -157,7 +157,7 @@ class _Register extends State<Customer_Register> {
                       child: TextField(
                         controller: passController,
                         style: TextStyle(color: Colors.white),
-                        obscureText: true,
+                        //obscureText: true,
                         decoration: const InputDecoration(
                           suffix: Icon(
                             FontAwesomeIcons.eyeSlash,

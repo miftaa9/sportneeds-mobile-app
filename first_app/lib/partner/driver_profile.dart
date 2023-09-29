@@ -1,18 +1,15 @@
-import 'package:first_app/layout/customerBottomNav.dart';
 import 'package:first_app/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:responsive_grid/responsive_grid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
-class NutrisionisProfile extends StatefulWidget {
+class DriverProfile extends StatefulWidget {
   @override
-  _NutrisionisProfile createState() => _NutrisionisProfile();
+  State<StatefulWidget> createState() => _DriverProfile();
 }
 
-class _NutrisionisProfile extends State<NutrisionisProfile> {
+class _DriverProfile extends State<DriverProfile> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
   TextEditingController namaController = TextEditingController();
@@ -45,7 +42,7 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
 
   onGoBack(dynamic value) {
     setState(() {
-      _NutrisionisProfile();
+      _DriverProfile();
     });
   }
 
@@ -53,13 +50,13 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
     await supabase.from('users').update({
       "pass": passController.text.toString(),
     }).eq('id', id);
-    await supabase.from('user_nutrisionis').update({
+    await supabase.from('user_driver').update({
       "nama": namaController.text.toString(),
       "notelp": notelpController.text.toString(),
       "alamat": alamatController.text.toString(),
     }).eq('user_id', id);
     Fluttertoast.showToast(
-      msg: 'Profile sukses di-update',
+      msg: 'Profil sukses di-update',
       backgroundColor: Colors.green,
       textColor: Colors.white,
       toastLength: Toast.LENGTH_SHORT,
@@ -111,14 +108,14 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
           return const Center(child: CircularProgressIndicator());
         }
         final dat = snapshot.data!;
+        final tesjpg =
+            supabase.storage.from('shop_produk').getPublicUrl(dat[4]);
 
         final dtuser =
             supabase.from('users').select().eq('id', dat[3]).single();
 
-        final tesjpg =
-            supabase.storage.from('shop_produk').getPublicUrl(dat[4]);
         final dtcust = supabase
-            .from('user_nutrisionis')
+            .from('user_driver')
             .select()
             .eq('user_id', dat[3])
             .single();
@@ -291,10 +288,6 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
                                         controller: namaController,
                                         style: TextStyle(color: Colors.white),
                                         decoration: const InputDecoration(
-                                          /*suffix: Icon(
-                            FontAwesomeIcons.eyeSlash,
-                            color: Colors.red,
-                          ),*/
                                           labelText: "Nama",
                                           labelStyle:
                                               TextStyle(color: Colors.white),
@@ -323,10 +316,6 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
                                         controller: notelpController,
                                         style: TextStyle(color: Colors.white),
                                         decoration: const InputDecoration(
-                                          /*suffix: Icon(
-                            FontAwesomeIcons.eyeSlash,
-                            color: Colors.red,
-                          ),*/
                                           labelText: "No Telp",
                                           labelStyle:
                                               TextStyle(color: Colors.white),
@@ -355,10 +344,6 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
                                         controller: alamatController,
                                         style: TextStyle(color: Colors.white),
                                         decoration: const InputDecoration(
-                                          /*suffix: Icon(
-                            FontAwesomeIcons.eyeSlash,
-                            color: Colors.red,
-                          ),*/
                                           labelText: "Alamat",
                                           labelStyle:
                                               TextStyle(color: Colors.white),
@@ -428,18 +413,18 @@ class _NutrisionisProfile extends State<NutrisionisProfile> {
                           switch (index) {
                             case 0:
                               Navigator.pushNamedAndRemoveUntil(
-                                  context, "/nutrisionis_home", (r) => false);
+                                  context, "/driver_home", (r) => false);
                               break;
                             case 1:
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  "/nutrisionis_profile", (r) => false);
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, "/driver_profile", (r) => false);
                               break;
                           }
                         },
                         items: const <BottomNavigationBarItem>[
                           BottomNavigationBarItem(
                             icon: ImageIcon(
-                              AssetImage("asset/images/b/pesan.png"),
+                              AssetImage("asset/images/b/home.png"),
                               color: Color(0xFF2B9EA4),
                             ),
                             label: 'Home',

@@ -114,18 +114,6 @@ class _CustomerCart extends State<CustomerCart> {
               ]),
               backgroundColor: Colors.white, //You can make this transparent
               elevation: 0.0, //No shadow
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(
-                    Icons.logout,
-                    color: Color(0xFF2B9EA4),
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, "/first", (r) => false);
-                  },
-                )
-              ],
               actionsIconTheme:
                   IconThemeData(color: Color(0xFF2B9EA4), size: 36),
               toolbarHeight: 80, // default is 56

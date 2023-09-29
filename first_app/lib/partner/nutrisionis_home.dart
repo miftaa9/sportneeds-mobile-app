@@ -57,8 +57,15 @@ class _NutrisionisHome extends State<NutrisionisHome> {
       prefs.getString('usernama') ?? 'K',
       prefs.getString('email') ?? 'K',
       prefs.getBool('active') ?? false,
-      prefs.getInt('userid') ?? 0
+      prefs.getInt('userid') ?? 0,
+      prefs.getString('pic') ?? ''
     ];
+  }
+
+  onGoBack(dynamic value) {
+    setState(() {
+      _NutrisionisHome();
+    });
   }
 
   final _future = Supabase.instance.client
@@ -79,6 +86,8 @@ class _NutrisionisHome extends State<NutrisionisHome> {
             useraktif = dat[2];
             useraktifs = 1;
           }
+          final tesjpg =
+              supabase.storage.from('shop_produk').getPublicUrl(dat[4]);
           return Scaffold(
               backgroundColor: Color(0xFF2B9EA4),
               appBar: AppBar(
@@ -93,25 +102,21 @@ class _NutrisionisHome extends State<NutrisionisHome> {
                         color: Color(0xFF2B9EA4),
                       )),
                 ]),
-                leading: const Icon(
-                  Icons.account_circle,
-                  size: 50,
-                  color: Color(0xFF2B9EA4),
+                leading: IconButton(
+                  icon: (dat[4] == '')
+                      ? const Icon(
+                          Icons.account_circle,
+                          size: 50,
+                          color: Color(0xFF2B9EA4),
+                        )
+                      : CircleAvatar(backgroundImage: NetworkImage(tesjpg)),
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/profile_pic").then(onGoBack);
+                  },
                 ),
                 backgroundColor: Colors.white, //You can make this transparent
                 elevation: 0.0, //No shadow
-                actions: <Widget>[
-                  IconButton(
-                    icon: Icon(
-                      Icons.logout,
-                      color: Color(0xFF2B9EA4),
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, "/first", (r) => false);
-                    },
-                  )
-                ],
+
                 actionsIconTheme:
                     IconThemeData(color: Color(0xFF2B9EA4), size: 36),
                 toolbarHeight: 80, // default is 56

@@ -35,8 +35,15 @@ class _NutrishopProfile extends State<NutrishopProfile> {
       prefs.getString('usernama') ?? 'K',
       prefs.getString('email') ?? 'K',
       prefs.getBool('active') ?? false,
-      prefs.getInt('userid') ?? 0
+      prefs.getInt('userid') ?? 0,
+      prefs.getString('pic') ?? ''
     ];
+  }
+
+  onGoBack(dynamic value) {
+    setState(() {
+      _NutrishopProfile();
+    });
   }
 
   Future registProcess(id) async {
@@ -58,6 +65,39 @@ class _NutrishopProfile extends State<NutrishopProfile> {
     setState(() {});
   }
 
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("Batal"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Ya"),
+      onPressed: () {
+        Navigator.pushNamedAndRemoveUntil(context, "/first", (r) => false);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Logout ?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     log("$context");
@@ -77,6 +117,9 @@ class _NutrishopProfile extends State<NutrishopProfile> {
             .select()
             .eq('user_id', dat[3])
             .single();
+
+        final tesjpg =
+            supabase.storage.from('shop_produk').getPublicUrl(dat[4]);
         return FutureBuilder(
             future: dtuser,
             builder: (context, snapshot) {
@@ -117,10 +160,19 @@ class _NutrishopProfile extends State<NutrishopProfile> {
                                 color: Color(0xFF2B9EA4),
                               )),
                         ]),
-                        leading: const Icon(
-                          Icons.account_circle,
-                          size: 50,
-                          color: Color(0xFF2B9EA4),
+                        leading: IconButton(
+                          icon: (dat[4] == '')
+                              ? const Icon(
+                                  Icons.account_circle,
+                                  size: 50,
+                                  color: Color(0xFF2B9EA4),
+                                )
+                              : CircleAvatar(
+                                  backgroundImage: NetworkImage(tesjpg)),
+                          onPressed: () {
+                            Navigator.pushNamed(context, "/profile_pic")
+                                .then(onGoBack);
+                          },
                         ),
                         backgroundColor:
                             Colors.white, //You can make this transparent
@@ -132,8 +184,7 @@ class _NutrishopProfile extends State<NutrishopProfile> {
                               color: Color(0xFF2B9EA4),
                             ),
                             onPressed: () {
-                              Navigator.pushNamedAndRemoveUntil(
-                                  context, "/first", (r) => false);
+                              showAlertDialog(context);
                             },
                           )
                         ],

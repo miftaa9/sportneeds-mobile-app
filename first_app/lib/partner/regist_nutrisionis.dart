@@ -163,7 +163,7 @@ class _Regist_Nutrisionis extends State<Regist_Nutrisionis> {
                       child: TextField(
                         controller: passController,
                         style: TextStyle(color: Colors.white),
-                        obscureText: true,
+                        //obscureText: true,
                         decoration: InputDecoration(
                           suffix: Icon(
                             FontAwesomeIcons.eyeSlash,
@@ -279,7 +279,9 @@ class _Regist_Nutrisionis extends State<Regist_Nutrisionis> {
                           color: Colors.white,
                         ),
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            registProcess();
+                          },
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.all(12.0),
                             minimumSize: Size(50, 30),

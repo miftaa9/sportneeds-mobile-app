@@ -1,4 +1,6 @@
 //import 'package:androidflutter/widgets/cache_tile.dart';
+import 'dart:developer';
+
 import 'package:first_app/layout/customerAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,7 +37,22 @@ class _Regist_Nutrishop_lokasi extends State<Regist_Nutrishop_lokasi> {
   }
 
   Future<void> getLocation() async {
-    TrustLocation.start(5);
+    locationv2.LocationData _locationData = await lokasi.getLocation();
+    log("dd $_locationData");
+    lokasi.onLocationChanged.listen((locationv2.LocationData currentLocation) {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+          _latitude = double.parse(currentLocation.latitude.toString());
+          _longitude = double.parse(currentLocation.longitude.toString());
+
+          _mapController.move(LatLng(_latitude, _longitude), 13);
+
+          getPlace();
+        });
+      }
+    });
+    /*TrustLocation.start(5);
     try {
       TrustLocation.onChange.listen((values) {
         var mockStatus = values.isMockLocation;
@@ -54,7 +71,7 @@ class _Regist_Nutrishop_lokasi extends State<Regist_Nutrishop_lokasi> {
       });
     } on PlatformException catch (e) {
       debugPrint('PlatformException $e');
-    }
+    }*/
   }
 
   void getPlace() async {

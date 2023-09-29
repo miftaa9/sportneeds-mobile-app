@@ -4,14 +4,16 @@ import 'package:first_app/customer/cart.dart';
 import 'package:first_app/customer/cart_checkout.dart';
 import 'package:first_app/customer/cust_riwaya.dart';
 import 'package:first_app/customer/cust_riwayat_detail.dart';
+import 'package:first_app/customer/kalori.dart';
 import 'package:first_app/customer/nutrishop_addcart.dart';
 import 'package:first_app/customer/nutrishop_detail.dart';
-import 'package:first_app/customer/nutrisi.dart';
-import 'package:first_app/customer/nutrisi_detail.dart';
 import 'package:first_app/customer/profile.dart';
+import 'package:first_app/customer/profile_pic.dart';
 import 'package:first_app/partner/driver_home.dart';
 import 'package:first_app/partner/driver_map.dart';
 import 'package:first_app/partner/driver_map2.dart';
+import 'package:first_app/partner/driver_pendapatan.dart';
+import 'package:first_app/partner/driver_profile.dart';
 import 'package:first_app/partner/nutrishop_home.dart';
 import 'package:first_app/partner/nutrishop_pendapatan.dart';
 import 'package:first_app/partner/nutrishop_pesandetail.dart';
@@ -95,8 +97,7 @@ class MyApp extends StatelessWidget {
         '/customer_cart_checkout': (_) => CustomerCartCheckout(),
         '/customer_konsultasi': (_) => CustomerKonsultasi(),
         '/customer_konsultasi_show': (_) => CustomerKonsultasiShow(),
-        '/customer_nutrisi': (_) => CustNutrisi(),
-        '/customer_nutrisi_detail': (_) => CustNutrisiDetail(),
+        '/customer_kalori': (_) => CustomerKalori(),
         '/customer_profile': (_) => CustomerProfile(),
         '/menu_registrasi': (_) => Menu_Registrasi(),
         '/reg_driver': (_) => Regist_Driver(),
@@ -115,8 +116,11 @@ class MyApp extends StatelessWidget {
         '/driver_home': (_) => DriverHome(),
         '/driver_map': (_) => DriverMap(),
         '/driver_map2': (_) => DriverMap2(),
+        '/driver_profile': (_) => DriverProfile(),
+        '/driver_pendapatan': (_) => driverPendapatan(),
         '/admin_home': (_) => AdminHome(),
         '/admin_edit': (_) => AdminEdit(),
+        '/profile_pic': (_) => ProfilePic(),
         //'/driver_home': (_) => HomeScreen(),
         //'/driver_home': (_) => GeoMapPage(),
         //'/driver_tes': (_) => ListenLocationWidget(),

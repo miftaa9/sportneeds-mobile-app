@@ -39,7 +39,8 @@ class _CustomerShopAddcart extends State<CustomerShopAddcart> {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.TOP,
     );
-    Navigator.pop(context);
+    //Navigator.pop(context);
+    Navigator.pushNamed(context, "/customer_cart");
   }
 
   @override

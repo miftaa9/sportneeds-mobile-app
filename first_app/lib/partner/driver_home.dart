@@ -78,8 +78,15 @@ class _DriverHome extends State<DriverHome> {
       prefs.getString('usernama') ?? 'K',
       prefs.getString('email') ?? 'K',
       prefs.getBool('active') ?? false,
-      prefs.getInt('userid') ?? 0
+      prefs.getInt('userid') ?? 0,
+      prefs.getString('pic') ?? ''
     ];
+  }
+
+  onGoBack(dynamic value) {
+    setState(() {
+      _DriverHome();
+    });
   }
 
   late final Stream<List<Transaction>> _messagesStream = supabase
@@ -98,6 +105,8 @@ class _DriverHome extends State<DriverHome> {
             return const Center(child: CircularProgressIndicator());
           }
           final dat = snapshot.data!;
+          final tesjpg =
+              supabase.storage.from('shop_produk').getPublicUrl(dat[4]);
 
           return Scaffold(
               backgroundColor: Color(0xFF2B9EA4),
@@ -113,64 +122,133 @@ class _DriverHome extends State<DriverHome> {
                         color: Color(0xFF2B9EA4),
                       )),
                 ]),
-                leading: const Icon(
-                  Icons.account_circle,
-                  size: 50,
-                  color: Color(0xFF2B9EA4),
+                leading: IconButton(
+                  icon: (dat[4] == '')
+                      ? const Icon(
+                          Icons.account_circle,
+                          size: 50,
+                          color: Color(0xFF2B9EA4),
+                        )
+                      : CircleAvatar(backgroundImage: NetworkImage(tesjpg)),
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/profile_pic").then(onGoBack);
+                  },
                 ),
                 backgroundColor: Colors.white, //You can make this transparent
                 elevation: 0.0, //No shadow
-                actions: <Widget>[
-                  IconButton(
-                    icon: Icon(
-                      Icons.logout,
-                      color: Color(0xFF2B9EA4),
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, "/first", (r) => false);
-                    },
-                  )
-                ],
                 actionsIconTheme:
                     IconThemeData(color: Color(0xFF2B9EA4), size: 36),
                 toolbarHeight: 80, // default is 56
               ),
+              bottomNavigationBar: BottomNavigationBar(
+                iconSize: 40,
+                selectedIconTheme:
+                    IconThemeData(color: Colors.amberAccent, size: 40),
+                selectedItemColor: Colors.amberAccent,
+                showSelectedLabels: false,
+                showUnselectedLabels: false,
+                currentIndex: _selectedIndex,
+                unselectedItemColor: Colors.grey,
+                onTap: (index) {
+                  switch (index) {
+                    case 0:
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, "/driver_home", (r) => false);
+                      break;
+                    case 1:
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, "/driver_profile", (r) => false);
+                      break;
+                  }
+                },
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: ImageIcon(
+                      AssetImage("asset/images/b/home.png"),
+                      color: Color(0xFF2B9EA4),
+                    ),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: ImageIcon(
+                      AssetImage("asset/images/b/akun.png"),
+                      color: Color(0xFF2B9EA4),
+                    ),
+                    label: 'Profile',
+                  ),
+                ],
+              ),
               body: Column(
                 children: <Widget>[
-                  Expanded(
-                      flex: 1,
+                  Container(
+                      height: 60,
+                      child: Container(
+                          height: 100,
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                color: Colors.greenAccent,
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(20.0), //<-- SEE HERE
+                            ),
+                            child: CupertinoListTile(
+                              title: Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Text(
+                                    'Pendapatan',
+                                    style: TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold),
+                                  )),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          '/driver_pendapatan',
+                                          arguments: {
+                                            'sid': dat[3],
+                                          },
+                                        );
+                                      },
+                                      icon: const Icon(Icons.arrow_forward_ios),
+                                      color: Color(0xFF2B9EA4)),
+                                ],
+                              ),
+                            ),
+                          ))),
+                  Container(
                       child: Card(
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(
-                            color: Colors.greenAccent,
-                          ),
-                          borderRadius:
-                              BorderRadius.circular(20.0), //<-- SEE HERE
-                        ),
-                        child: CupertinoListTile(
-                            title: Padding(
-                                padding: EdgeInsets.all(14.0),
-                                child: Text(
-                                  'Mulai Bekerja?',
-                                  style: TextStyle(
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold),
-                                )),
-                            trailing: CupertinoSwitch(
-                              value: useraktif,
-                              thumbColor: Colors.white,
-                              activeColor: Colors.deepPurple,
-                              // trackColor: ,
-
-                              onChanged: (value) {
-                                _changeAktif(value);
-                              },
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        color: Colors.greenAccent,
+                      ),
+                      borderRadius: BorderRadius.circular(20.0), //<-- SEE HERE
+                    ),
+                    child: CupertinoListTile(
+                        title: Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(
+                              'Mulai Bekerja?',
+                              style: TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.bold),
                             )),
-                      )),
+                        trailing: CupertinoSwitch(
+                          value: useraktif,
+                          thumbColor: Colors.white,
+                          activeColor: Colors.deepPurple,
+                          // trackColor: ,
+
+                          onChanged: (value) {
+                            _changeAktif(value);
+                          },
+                        )),
+                  )),
                   if (useraktif) ...[
                     Expanded(
-                      flex: 9,
                       child: Card(
                           margin: const EdgeInsets.symmetric(
                               horizontal: 10.0, vertical: 2.0),
@@ -242,7 +320,7 @@ class _DriverHome extends State<DriverHome> {
                           )),
                     ),
                   ] else ...[
-                    Expanded(flex: 9, child: Text('ddd'))
+                    Expanded(flex: 9, child: Text(''))
                   ]
                 ],
               ));

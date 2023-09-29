@@ -31,6 +31,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final arg = ModalRoute.of(context)!.settings.arguments as Map;
+    final uid = arg["uid"];
     currentMonthList = date_util.DateUtils.daysInMonth(_selectedValue);
     currentMonthList.sort((a, b) => a.day.compareTo(b.day));
     currentMonthList = currentMonthList.toSet().toList();
@@ -40,8 +42,19 @@ class _MyHomePageState extends State<MyHomePage> {
     final _future = supabase
         .from('transaction')
         .select()
+        .eq('iduser', uid)
         .eq('status', 'selesai')
-        .like('datez', '%$dateO%');
+        .like('datez', '%$dateO%')
+        .order('created_at', ascending: true);
+    ;
+
+    final _futurex2 = supabase
+        .from('kalori')
+        .select()
+        .eq('user_id', uid)
+        .eq('tgl', dateO)
+        .order('id', ascending: true);
+    ;
     return Scaffold(
         backgroundColor: Color(0xFF2B9EA4),
         appBar: const LayoutCustomerAppBar(
@@ -52,8 +65,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ))),
         bottomNavigationBar: LayoutCustomerBottomNav(),
         body: Column(children: <Widget>[
-          Expanded(
-              flex: 3,
+          Container(
+              height: 170,
               child: Card(
                   shape: RoundedRectangleBorder(
                     side: BorderSide(
@@ -75,8 +88,89 @@ class _MyHomePageState extends State<MyHomePage> {
                           Text("$_selectedValue")
                         ],
                       )))),
+          Container(
+            height: 100,
+            child: FutureBuilder(
+                future: _futurex2,
+                builder: (context, snapshot) {
+                  if (snapshot.data.length == 0) {
+                    return Card(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: Colors.greenAccent,
+                          ),
+                          borderRadius:
+                              BorderRadius.circular(20.0), //<-- SEE HERE
+                        ),
+                        child: Padding(
+                            padding: EdgeInsets.all(2.0),
+                            child: ListTile(
+                              title: Text(
+                                'Kalori Harian',
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF2B9EA4),
+                                ),
+                              ),
+                              trailing: Text(
+                                '0  kkal',
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF2B9EA4),
+                                ),
+                              ),
+                            )));
+                  }
+                  log("ggg ${snapshot.data}");
+                  final yat = snapshot.data!;
+                  double totalenergiz = 0.0;
+                  int no = 0;
+                  log("vv $yat");
+                  return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: yat.length,
+                      itemBuilder: (context, index) {
+                        final yatz = yat[index];
+                        totalenergiz += double.parse(yatz['energi']);
+                        no += 1;
+                        log("km $no $index ${yat.length}");
+                        return (index == (yat.length - 1))
+                            ? Card(
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                    color: Colors.greenAccent,
+                                  ),
+                                  borderRadius: BorderRadius.circular(
+                                      20.0), //<-- SEE HERE
+                                ),
+                                child: Padding(
+                                    padding: EdgeInsets.all(2.0),
+                                    child: ListTile(
+                                      title: Text(
+                                        'Kalori Harian',
+                                        style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFF2B9EA4),
+                                        ),
+                                      ),
+                                      trailing: Text(
+                                        '${totalenergiz.toStringAsFixed(2)}  kkal',
+                                        style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFF2B9EA4),
+                                        ),
+                                      ),
+                                    )))
+                            : Text('');
+                      });
+                }),
+          ),
           Expanded(
-            flex: 9,
             child: FutureBuilder(
               future: _future,
               builder: (context, snapshot) {
@@ -93,6 +187,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         .select('id, namatoko')
                         .eq('id', country['sid']);
                     log("${country}");
+
+                    var parts = country['created_at'].split('T');
+                    var prefix = parts[0].trim();
+                    var dateee = parts.sublist(1).join(':').trim();
+                    dateee = dateee.split('.');
+                    dateee = dateee[0].trim();
+                    log("ww $dateee");
                     return Card(
                       margin: const EdgeInsets.symmetric(
                           horizontal: 10.0, vertical: 2.0),
@@ -108,12 +209,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                     color: Color(0xFF2B9EA4)),
                                 children: [
                                   TextSpan(
-                                    text: "${country['created_at']}",
+                                    text: "Pesanan ${index + 1} \n$dateee",
                                   ),
                                 ],
                               ),
                             ),
-                            subtitle: Text("${country['status']}"),
+                            subtitle: Text("${country['status']} "),
                             onTap: () {},
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,

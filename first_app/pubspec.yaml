@@ -63,6 +63,7 @@ dependencies:
   date_picker_timeline: ^1.2.5
   month_picker_dialog: ^2.0.2
   simple_circular_progress_bar: ^1.0.2
+  table_calendar: ^3.0.9
 
 dependency_overrides:
   intl: ^0.17.0

@@ -21,6 +21,10 @@ class _Register extends State<Customer_Register> {
   TextEditingController namaController = TextEditingController();
   TextEditingController notelpController = TextEditingController();
   TextEditingController alamatController = TextEditingController();
+  TextEditingController tbController = TextEditingController();
+  TextEditingController bbController = TextEditingController();
+  var cabora;
+  String dropdownvalue = '1';
 
   Future registProcess() async {
     final data = await supabase
@@ -37,6 +41,9 @@ class _Register extends State<Customer_Register> {
       "nama": namaController.text.toString(),
       "notelp": notelpController.text.toString(),
       "alamat": alamatController.text.toString(),
+      "tb": tbController.text.toString(),
+      "bb": bbController.text.toString(),
+      "cabang_id": int.parse(cabora),
       "user_id": idu,
     });
     Fluttertoast.showToast(
@@ -48,6 +55,8 @@ class _Register extends State<Customer_Register> {
     );
     Navigator.pushNamed(context, '/login');
   }
+
+  final _futurex = supabase.from('cabang_olahraga').select();
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +90,6 @@ class _Register extends State<Customer_Register> {
       body: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.only(top: 10.0),
-          height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
             color: Colors.white,
@@ -113,7 +121,6 @@ class _Register extends State<Customer_Register> {
               ),
               Container(
                 width: 325,
-                height: 500,
                 decoration: const BoxDecoration(
                   color: Color(0xFF2B9EA4),
                   borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -257,6 +264,117 @@ class _Register extends State<Customer_Register> {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Container(
+                      width: 260,
+                      height: 60,
+                      child: TextField(
+              keyboardType: TextInputType.number,
+                        controller: tbController,
+                        style: TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          /*suffix: Icon(
+                            FontAwesomeIcons.eyeSlash,
+                            color: Colors.red,
+                          ),*/
+                          labelText: "Tinggi Badan",
+                          labelStyle: TextStyle(color: Colors.white),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Container(
+                      width: 260,
+                      height: 60,
+                      child: TextField(
+              keyboardType: TextInputType.number,
+                        controller: bbController,
+                        style: TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          /*suffix: Icon(
+                            FontAwesomeIcons.eyeSlash,
+                            color: Colors.red,
+                          ),*/
+                          labelText: "Berat Badan",
+                          labelStyle: TextStyle(color: Colors.white),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),FutureBuilder(
+                                        future: _futurex,
+                                        builder: (context, snapshot) {
+                                          if (!snapshot.hasData) {
+                                            return const Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          }
+                                          final dat = snapshot.data!;
+                                          log("zz ${dropdownvalue}");
+
+                                          return Container(
+                                            width: 260,
+                                            height: 60,
+                                            child: DropdownButton(
+  dropdownColor: Color(0xFF2B9EA4), 
+                                              isExpanded: true,
+                                              iconEnabledColor:
+                                                  Colors.white,
+                                              underline: Container(
+                                                width: 200,
+                                                height: 1,
+                                                color: Colors.white,
+                                              ),
+                                              // Initial Value
+                                              value: dropdownvalue,
+
+                                              // Down Arrow Icon
+                                              icon: const Icon(
+                                                  Icons.keyboard_arrow_down),
+
+                                              items: snapshot.data
+                                                  .map<
+                                                      DropdownMenuItem<
+                                                          String>>((fc) =>
+                                                      DropdownMenuItem<String>(
+                                                        value: (fc['id']
+                                                            .toString()),
+                                                        child: Text(fc['nama'],
+                                        style: TextStyle(
+                                            color: Colors.white,),),
+                                                      ))
+                                                  .toList(),
+                                              // After selecting the desired option,it will
+                                              // change button value to selected value
+                                              onChanged: (String? newValue) {
+                                                setState(() {
+                                                  dropdownvalue = newValue!;
+                                                });
+                                              },
+                                            ),
+                                          );
+                                        }),
                     const SizedBox(
                       height: 12,
                     ),

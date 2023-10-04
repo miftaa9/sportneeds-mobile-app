@@ -49,7 +49,7 @@ class First extends StatelessWidget {
               ),
               Container(
                 width: 325,
-                height: 320,
+                height: 340,
                 decoration: const BoxDecoration(
                   color: Color(0xFF2B9EA4),
                   borderRadius: BorderRadius.all(Radius.circular(15)),

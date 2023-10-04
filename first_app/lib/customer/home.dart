@@ -275,6 +275,46 @@ class _Customer_Home extends State<Customer_Home> {
                     ),
                   ),
                 ),
+                Card(
+                  semanticContainer: true,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  elevation: 5,
+                  margin: EdgeInsets.all(10),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/cust_kalender',
+                        arguments: {
+                          'uid': dat[3],
+                        },
+                      );
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Image.asset(
+                          'asset/images/b/kalender.png',
+                          color: Color(0xFF2B9EA4),
+                          width: 80,
+                        ),
+                        const SizedBox(height: 4),
+                        const Center(
+                          child: Text(
+                            'Kalender Gizi',
+                            style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF2B9EA4)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ]),

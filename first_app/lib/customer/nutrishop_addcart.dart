@@ -43,6 +43,32 @@ class _CustomerShopAddcart extends State<CustomerShopAddcart> {
     Navigator.pushNamed(context, "/customer_cart");
   }
 
+  var ab = [
+    'Energy',
+    'Water',
+    'Protein',
+    'Fat',
+    'Carbohydr',
+    'Dietary',
+    'Alcohol',
+    'PUFA',
+    'Cholesterol',
+    'Vit. A',
+    'Carotene',
+    'Vit. E',
+    'Vit. B1',
+    'Vit. B2',
+    'Vit. B6',
+    'Tot. Fol.Acid',
+    'Vit. C',
+    'Sodium',
+    'Potassium',
+    'Calcium',
+    'Magnesium',
+    'Phosphorus',
+    'Iron',
+    'Zinc',
+  ];
   @override
   Widget build(BuildContext context) {
     final arg = ModalRoute.of(context)!.settings.arguments as Map;
@@ -53,119 +79,141 @@ class _CustomerShopAddcart extends State<CustomerShopAddcart> {
         supabase.storage.from('shop_produk').getPublicUrl(all['img']);
 
     return Scaffold(
-      backgroundColor: Color(0xFF2B9EA4),
-      appBar: LayoutCustomerAppBar(
-          title: Text(namatoko,
-              style: const TextStyle(
-                fontSize: 34,
-                color: Color(0xFF2B9EA4),
-              ))),
-      bottomNavigationBar: LayoutCustomerBottomNav(),
-      body: Card(
-          margin: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Image.network(tesjpg, height: 100),
-              //Image.asset('asset/images/b/edukasi.png'),
-              Container(
-                  margin: EdgeInsets.all(30),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Nama Produk : ${all['nama']}",
-                          style: TextStyle(
-                            color: Color(0xFF2B9EA4),
-                            fontSize: 20,
-                          ),
-                          textAlign: TextAlign.left,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          "Harga Produk : ${all['harga']}",
-                          style: TextStyle(
-                            color: Color(0xFF2B9EA4),
-                            fontSize: 20,
-                          ),
-                          textAlign: TextAlign.left,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        backgroundColor: Color(0xFF2B9EA4),
+        appBar: LayoutCustomerAppBar(
+            title: Text(namatoko,
+                style: const TextStyle(
+                  fontSize: 34,
+                  color: Color(0xFF2B9EA4),
+                ))),
+        bottomNavigationBar: LayoutCustomerBottomNav(),
+        body: SingleChildScrollView(
+            child: Container(
+          child: Card(
+              margin: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Image.network(tesjpg, height: 100),
+                  //Image.asset('asset/images/b/edukasi.png'),
+                  Container(
+                      margin: EdgeInsets.all(30),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            IconButton(
-                              icon: Icon(
-                                Icons.remove,
-                                color: Color(0xFF2B9EA4),
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 4.0, horizontal: 18.0),
-                              iconSize: 32.0,
-                              color: Theme.of(context).primaryColor,
-                              onPressed: () {
-                                setState(() {
-                                  if (counter > minValue) {
-                                    counter--;
-                                  }
-                                  counterGanti(counter);
-                                });
-                              },
-                            ),
                             Text(
-                              '$counter',
-                              textAlign: TextAlign.center,
+                              "Nama Produk : ${all['nama']}",
                               style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                Icons.add,
                                 color: Color(0xFF2B9EA4),
+                                fontSize: 20,
                               ),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 4.0, horizontal: 18.0),
-                              iconSize: 32.0,
-                              color: Theme.of(context).primaryColor,
-                              onPressed: () {
-                                setState(() {
-                                  if (counter < maxValue) {
-                                    counter++;
-                                  }
-                                  counterGanti(counter);
-                                });
-                              },
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                saveProcess(pid);
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.all(12.0),
-                                child: Text(
-                                  'Simpan',
-                                  style: TextStyle(
-                                      color: Color(0xFF2B9EA4),
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
+                              textAlign: TextAlign.left,
                             ),
                             const SizedBox(
-                              height: 17,
+                              height: 15,
                             ),
-                          ],
-                        ),
-                      ])),
-            ],
-          )),
-    );
+                            Text(
+                              "Harga Produk : ${all['harga']}",
+                              style: TextStyle(
+                                color: Color(0xFF2B9EA4),
+                                fontSize: 20,
+                              ),
+                              textAlign: TextAlign.left,
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.remove,
+                                    color: Color(0xFF2B9EA4),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 4.0, horizontal: 18.0),
+                                  iconSize: 32.0,
+                                  color: Theme.of(context).primaryColor,
+                                  onPressed: () {
+                                    setState(() {
+                                      if (counter > minValue) {
+                                        counter--;
+                                      }
+                                      counterGanti(counter);
+                                    });
+                                  },
+                                ),
+                                Text(
+                                  '$counter',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.add,
+                                    color: Color(0xFF2B9EA4),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 4.0, horizontal: 18.0),
+                                  iconSize: 32.0,
+                                  color: Theme.of(context).primaryColor,
+                                  onPressed: () {
+                                    setState(() {
+                                      if (counter < maxValue) {
+                                        counter++;
+                                      }
+                                      counterGanti(counter);
+                                    });
+                                  },
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    saveProcess(pid);
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(12.0),
+                                    child: Text(
+                                      'Simpan',
+                                      style: TextStyle(
+                                          color: Color(0xFF2B9EA4),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 17,
+                                ),
+                              ],
+                            ),
+                            ListTile(
+                              title: RichText(
+                                selectionColor: Color(0xFF2B9EA4),
+                                text: TextSpan(
+                                  style:
+                                      const TextStyle(color: Color(0xFF2B9EA4)),
+                                  children: [
+                                    for (var i = 0; i < 24; i++) ...[
+                                      TextSpan(
+                                          text:
+                                              "${ab[i]} : ${all['a' + i.toString()]}\n"),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                              onTap: () {},
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                          ])),
+                ],
+              )),
+        )));
   }
 }

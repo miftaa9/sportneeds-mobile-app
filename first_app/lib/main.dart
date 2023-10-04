@@ -1,9 +1,14 @@
-import 'package:first_app/admin/edit.dart';
+import 'package:first_app/admin/gizishop.dart';
+import 'package:first_app/admin/gizi.dart';
+import 'package:first_app/admin/gizi_cu.dart';
+import 'package:first_app/admin/gizi_ext.dart';
+import 'package:first_app/admin/gizishop_cu.dart';
 import 'package:first_app/admin/home.dart';
 import 'package:first_app/customer/cart.dart';
 import 'package:first_app/customer/cart_checkout.dart';
 import 'package:first_app/customer/cust_riwaya.dart';
 import 'package:first_app/customer/cust_riwayat_detail.dart';
+import 'package:first_app/customer/kalender.dart';
 import 'package:first_app/customer/kalori.dart';
 import 'package:first_app/customer/nutrishop_addcart.dart';
 import 'package:first_app/customer/nutrishop_detail.dart';
@@ -99,6 +104,7 @@ class MyApp extends StatelessWidget {
         '/customer_konsultasi_show': (_) => CustomerKonsultasiShow(),
         '/customer_kalori': (_) => CustomerKalori(),
         '/customer_profile': (_) => CustomerProfile(),
+        '/cust_kalender': (_) => custtKalender(),
         '/menu_registrasi': (_) => Menu_Registrasi(),
         '/reg_driver': (_) => Regist_Driver(),
         '/reg_nutrishop': (_) => Regist_Nutrishop(),
@@ -118,8 +124,12 @@ class MyApp extends StatelessWidget {
         '/driver_map2': (_) => DriverMap2(),
         '/driver_profile': (_) => DriverProfile(),
         '/driver_pendapatan': (_) => driverPendapatan(),
-        '/admin_home': (_) => AdminHome(),
-        '/admin_edit': (_) => AdminEdit(),
+        '/admin_home': (_) => adminHome(),
+        '/admin_gizi': (_) => adminGizi(),
+        '/admin_gizi_cu': (_) => adminGiziCu(),
+        '/admin_gizi_ext': (_) => adminGiziExt(),
+        '/admin_gizishop': (_) => AdminGiziShop(),
+        '/admin_gizishop_cu': (_) => AdminGiziShopCu(),
         '/profile_pic': (_) => ProfilePic(),
         //'/driver_home': (_) => HomeScreen(),
         //'/driver_home': (_) => GeoMapPage(),

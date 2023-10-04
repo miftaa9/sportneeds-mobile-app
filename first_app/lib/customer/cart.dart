@@ -53,6 +53,32 @@ class _CustomerCart extends State<CustomerCart> {
     });
   }
 
+  var ab = [
+    'Energy',
+    'Water',
+    'Protein',
+    'Fat',
+    'Carbohydr',
+    'Dietary',
+    'Alcohol',
+    'PUFA',
+    'Cholesterol',
+    'Vit. A',
+    'Carotene',
+    'Vit. E',
+    'Vit. B1',
+    'Vit. B2',
+    'Vit. B6',
+    'Tot. Fol.Acid',
+    'Vit. C',
+    'Sodium',
+    'Potassium',
+    'Calcium',
+    'Magnesium',
+    'Phosphorus',
+    'Iron',
+    'Zinc',
+  ];
   deleteData(id) async {
     await supabase.from('cart').delete().match({'id': id});
   }
@@ -134,6 +160,7 @@ class _CustomerCart extends State<CustomerCart> {
                         itemBuilder: ((context, index) {
                           final country = countries[index];
                           final jsona = country['produks'];
+                          print(jsona);
                           //final jsona = json.encode(country['produks']);
                           //log("${jsona[0]}");
                           num totalharga = 0;
@@ -265,39 +292,13 @@ class _CustomerCart extends State<CustomerCart> {
                                                                   color: Color(
                                                                       0xFF2B9EA4)),
                                                               children: [
-                                                                TextSpan(
-                                                                    text:
-                                                                        "Energi : ${country['energi'][0]}\n"),
-                                                                TextSpan(
-                                                                    text:
-                                                                        "Water : ${country['water'][0]}\n"),
-                                                                TextSpan(
-                                                                    text:
-                                                                        "Protein : ${country['protein'][0]}\n"),
-                                                                TextSpan(
-                                                                    text:
-                                                                        "Fat : ${country['fat'][0]}\n"),
-                                                                TextSpan(
-                                                                    text:
-                                                                        "Karbohidrat : ${country['karbo'][0]}\n"),
-                                                                TextSpan(
-                                                                    text:
-                                                                        "Cholesterol : ${country['chr'][0]}\n"),
-                                                                TextSpan(
-                                                                    text:
-                                                                        "Vitamin A : ${country['vita'][0]}\n"),
-                                                                TextSpan(
-                                                                    text:
-                                                                        "Vitamin C : ${country['vitc'][0]}\n"),
-                                                                TextSpan(
-                                                                    text:
-                                                                        "Vitamin E : ${country['vite'][0]}\n"),
-                                                                TextSpan(
-                                                                    text:
-                                                                        "Magnesium : ${country['mag'][0]}\n"),
-                                                                TextSpan(
-                                                                    text:
-                                                                        "Sodium : ${country['sod'][0]}\n"),
+                                                                for (var i = 0;
+                                                                    i < 24;
+                                                                    i++) ...[
+                                                                  TextSpan(
+                                                                      text:
+                                                                          "${ab[i]} : ${(country['a' + i.toString()] == null) ? '' : (country['a' + i.toString()][0])}\n"),
+                                                                ],
                                                               ],
                                                             ),
                                                           ),

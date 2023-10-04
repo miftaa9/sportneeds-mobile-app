@@ -32,7 +32,7 @@ class _CustomerEdukasiShow extends State<CustomerEdukasiShow> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Image.network(all['img']),
+                //Image.network(all['img']),
                 //Image.asset('asset/images/b/edukasi.png'),
                 Center(
                   child: Padding(

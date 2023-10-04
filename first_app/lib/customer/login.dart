@@ -77,7 +77,7 @@ class _Login extends State<Login> {
           await prefs.setString('usernama', 'admin');
           await prefs.setBool('active', true);
           await prefs.setString('email', 'admin');
-          await prefs.setString('pic', a['pic']);
+          await prefs.setString('pic', '');
           Navigator.pushNamed(context, '/admin_home');
         }
         final datacust = await supabase

@@ -77,7 +77,7 @@ class _CustomerShopAddcart extends State<CustomerShopAddcart> {
     final all = arg["data"];
     final tesjpg =
         supabase.storage.from('shop_produk').getPublicUrl(all['img']);
-
+    var cc2 = 0;
     return Scaffold(
         backgroundColor: Color(0xFF2B9EA4),
         appBar: LayoutCustomerAppBar(
@@ -191,22 +191,74 @@ class _CustomerShopAddcart extends State<CustomerShopAddcart> {
                                 ),
                               ],
                             ),
-                            ListTile(
-                              title: RichText(
-                                selectionColor: Color(0xFF2B9EA4),
-                                text: TextSpan(
-                                  style:
-                                      const TextStyle(color: Color(0xFF2B9EA4)),
-                                  children: [
-                                    for (var i = 0; i < 24; i++) ...[
-                                      TextSpan(
-                                          text:
-                                              "${ab[i]} : ${all['a' + i.toString()]}\n"),
-                                    ],
+                            Divider(
+                              color: Color(0xFF2B9EA4),
+                              thickness: 2,
+                            ),
+                            Center(
+                              child: RichText(
+                                text: const TextSpan(
+                                  text: 'Kandungan ',
+                                  style: TextStyle(
+                                      color: Color(0xFF2B9EA4), fontSize: 30),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: 'Gizi',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold)),
                                   ],
                                 ),
                               ),
-                              onTap: () {},
+                            ),
+                            DataTable(
+                              sortAscending: true,
+                              sortColumnIndex: 1,
+                              showBottomBorder: false,
+                              columns: const [
+                                DataColumn(
+                                    label: Text('No',
+                                        style: TextStyle(
+                                          color: Color(0xFF2B9EA4),
+                                        )),
+                                    numeric: true),
+                                DataColumn(
+                                    label: Text('Nama',
+                                        style: TextStyle(
+                                          color: Color(0xFF2B9EA4),
+                                        ))),
+                                DataColumn(
+                                    label: Text('Nilai',
+                                        style: TextStyle(
+                                          color: Color(0xFF2B9EA4),
+                                        )),
+                                    numeric: true),
+                              ],
+                              rows: [
+                                ...ab.asMap().keys.toList().map((i) {
+                                  var cc =
+                                      (all['a' + (i + 1).toString()] == null)
+                                          ? ''
+                                          : all['a' + (i + 1).toString()];
+                                  return DataRow(
+                                    cells: [
+                                      DataCell(Text((i + 1).toString(),
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                            color: Color(0xFF2B9EA4),
+                                          ))),
+                                      DataCell(Text(ab[i],
+                                          style: TextStyle(
+                                            color: Color(0xFF2B9EA4),
+                                          ))),
+                                      DataCell(Text('${cc}',
+                                          textAlign: TextAlign.right,
+                                          style: TextStyle(
+                                            color: Color(0xFF2B9EA4),
+                                          )))
+                                    ],
+                                  );
+                                })
+                              ],
                             ),
                             const SizedBox(
                               height: 15,

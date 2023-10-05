@@ -95,6 +95,10 @@ class _Login extends State<Login> {
         await prefs.setBool('active', datacust['active']);
         await prefs.setString('email', a['email']);
         await prefs.setString('pic', ppic);
+        if (a['level'] == 0) {
+          //cabang olahraga id
+          await prefs.setInt('user_cabora_id', datacust['cabang_id']);
+        }
         Navigator.pushNamed(context, redirect);
       }
     }

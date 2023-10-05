@@ -1,9 +1,12 @@
-import 'package:first_app/admin/gizishop.dart';
+import 'package:first_app/admin/aktifitas.dart';
+import 'package:first_app/admin/aktifitas_cu.dart';
 import 'package:first_app/admin/gizi.dart';
 import 'package:first_app/admin/gizi_cu.dart';
 import 'package:first_app/admin/gizi_ext.dart';
 import 'package:first_app/admin/gizishop_cu.dart';
 import 'package:first_app/admin/home.dart';
+import 'package:first_app/admin/shopgizi.dart';
+import 'package:first_app/admin/shopgizi_detail.dart';
 import 'package:first_app/customer/cart.dart';
 import 'package:first_app/customer/cart_checkout.dart';
 import 'package:first_app/customer/cust_riwaya.dart';
@@ -33,6 +36,7 @@ import 'package:first_app/partner/tes.dart';
 import 'package:first_app/partner/tes2.dart';
 import 'package:first_app/partner/tes3.dart';
 import 'package:first_app/partner/tes4.dart';
+import 'package:first_app/partner/tes5.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -125,12 +129,16 @@ class MyApp extends StatelessWidget {
         '/driver_profile': (_) => DriverProfile(),
         '/driver_pendapatan': (_) => driverPendapatan(),
         '/admin_home': (_) => adminHome(),
-        '/admin_gizi': (_) => adminGizi(),
-        '/admin_gizi_cu': (_) => adminGiziCu(),
-        '/admin_gizi_ext': (_) => adminGiziExt(),
-        '/admin_gizishop': (_) => AdminGiziShop(),
+        '/admin_gizi': (_) => adminGizi(), //cabora
+        '/admin_gizi_cu': (_) => adminGiziCu(), //cabora
+        '/admin_gizi_ext': (_) => adminGiziExt(), //cabora
+        '/admin_aktifitas': (_) => adminAktifitas(),
+        '/admin_aktifitas_cu': (_) => adminAktifitasCu(),
+        '/admin_gizishop': (_) => adminShopGizi(),
+        '/admin_gizishop_detail': (_) => adminShopGiziDetail(),
         '/admin_gizishop_cu': (_) => AdminGiziShopCu(),
         '/profile_pic': (_) => ProfilePic(),
+        '/test5': (_) => AccordionApp(),
         //'/driver_home': (_) => HomeScreen(),
         //'/driver_home': (_) => GeoMapPage(),
         //'/driver_tes': (_) => ListenLocationWidget(),

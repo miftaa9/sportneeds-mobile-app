@@ -104,52 +104,55 @@ class _adminGizi extends State<adminGizi> {
               .select<List<Map<String, dynamic>>>();
           return Scaffold(
             backgroundColor: Color(0xFF2B9EA4),
-            appBar : AppBar(
-      title: Text("Data Cabang Olahraga",
-              style: const TextStyle(
-                fontSize: 24,
-                color: Color(0xFF2B9EA4),
-              )),
-      backgroundColor: Colors.white,
-      elevation: 0.0, //No shadow
-      /*actions: [
+            appBar: AppBar(
+              title: Text("Data Cabang Olahraga",
+                  style: const TextStyle(
+                    fontSize: 24,
+                    color: Color(0xFF2B9EA4),
+                  )),
+              backgroundColor: Colors.white,
+              elevation: 0.0, //No shadow
+              /*actions: [
           Icon(Icons.keyboard_arrow_down),
         ],*/
-        
-                        actions: <Widget>[
-                          IconButton(
-                            icon: Icon(
-                              Icons.add,
-                              color: Color(0xFF2B9EA4),
-                            ),
-                            onPressed: () {
-                            Navigator.pushNamed(context, "/admin_gizi_cu")
-                                .then(onGoBack);
-                            },
-                          )
-                        ],
-      actionsIconTheme: IconThemeData(color: Color(0xFF2B9EA4), size: 36),
-      toolbarHeight: 80, // default is 56
-      leading: Container(
-        margin: const EdgeInsets.only(left: 10.0),
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Icon(Icons.arrow_back),
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all(CircleBorder()),
-            padding: MaterialStateProperty.all(EdgeInsets.all(2)),
-            backgroundColor: MaterialStateProperty.all(
-                Color(0xFF2B9EA4)), // <-- Button color
-            overlayColor: MaterialStateProperty.resolveWith<Color?>((states) {
-              if (states.contains(MaterialState.pressed))
-                return Color.fromARGB(255, 34, 125, 129); // <-- Splash color
-            }),
-          ),
-        ),
-      ),
-    ),
+
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.add,
+                    color: Color(0xFF2B9EA4),
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/admin_gizi_cu")
+                        .then(onGoBack);
+                  },
+                )
+              ],
+              actionsIconTheme:
+                  IconThemeData(color: Color(0xFF2B9EA4), size: 36),
+              toolbarHeight: 80, // default is 56
+              leading: Container(
+                margin: const EdgeInsets.only(left: 10.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(Icons.arrow_back),
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all(CircleBorder()),
+                    padding: MaterialStateProperty.all(EdgeInsets.all(2)),
+                    backgroundColor: MaterialStateProperty.all(
+                        Color(0xFF2B9EA4)), // <-- Button color
+                    overlayColor:
+                        MaterialStateProperty.resolveWith<Color?>((states) {
+                      if (states.contains(MaterialState.pressed))
+                        return Color.fromARGB(
+                            255, 34, 125, 129); // <-- Splash color
+                    }),
+                  ),
+                ),
+              ),
+            ),
             body: FutureBuilder<List<Map<String, dynamic>>>(
               future: _future,
               builder: (context, snapshot) {
@@ -185,6 +188,15 @@ class _adminGizi extends State<adminGizi> {
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
+                                IconButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                              context, '/admin_aktifitas',
+                                              arguments: country)
+                                          .then(onGoBack);
+                                    },
+                                    icon: const Icon(
+                                        Icons.local_activity_outlined)),
                                 IconButton(
                                     onPressed: () {
                                       Navigator.pushNamed(

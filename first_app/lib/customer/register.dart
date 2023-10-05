@@ -43,7 +43,7 @@ class _Register extends State<Customer_Register> {
       "alamat": alamatController.text.toString(),
       "tb": tbController.text.toString(),
       "bb": bbController.text.toString(),
-      "cabang_id": int.parse(cabora),
+      "cabang_id": int.parse(dropdownvalue),
       "user_id": idu,
     });
     Fluttertoast.showToast(
@@ -271,7 +271,7 @@ class _Register extends State<Customer_Register> {
                       width: 260,
                       height: 60,
                       child: TextField(
-              keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.number,
                         controller: tbController,
                         style: TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
@@ -299,7 +299,7 @@ class _Register extends State<Customer_Register> {
                       width: 260,
                       height: 60,
                       child: TextField(
-              keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.number,
                         controller: bbController,
                         style: TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
@@ -322,59 +322,57 @@ class _Register extends State<Customer_Register> {
                     ),
                     const SizedBox(
                       height: 12,
-                    ),FutureBuilder(
-                                        future: _futurex,
-                                        builder: (context, snapshot) {
-                                          if (!snapshot.hasData) {
-                                            return const Center(
-                                                child:
-                                                    CircularProgressIndicator());
-                                          }
-                                          final dat = snapshot.data!;
-                                          log("zz ${dropdownvalue}");
+                    ),
+                    FutureBuilder(
+                        future: _futurex,
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          final dat = snapshot.data!;
+                          log("zz ${dropdownvalue}");
 
-                                          return Container(
-                                            width: 260,
-                                            height: 60,
-                                            child: DropdownButton(
-  dropdownColor: Color(0xFF2B9EA4), 
-                                              isExpanded: true,
-                                              iconEnabledColor:
-                                                  Colors.white,
-                                              underline: Container(
-                                                width: 200,
-                                                height: 1,
+                          return Container(
+                            width: 260,
+                            height: 60,
+                            child: DropdownButton(
+                              dropdownColor: Color(0xFF2B9EA4),
+                              isExpanded: true,
+                              iconEnabledColor: Colors.white,
+                              underline: Container(
+                                width: 200,
+                                height: 1,
+                                color: Colors.white,
+                              ),
+                              // Initial Value
+                              value: dropdownvalue,
+
+                              // Down Arrow Icon
+                              icon: const Icon(Icons.keyboard_arrow_down),
+
+                              items: snapshot.data
+                                  .map<DropdownMenuItem<String>>(
+                                      (fc) => DropdownMenuItem<String>(
+                                            value: (fc['id'].toString()),
+                                            child: Text(
+                                              fc['nama'],
+                                              style: TextStyle(
                                                 color: Colors.white,
                                               ),
-                                              // Initial Value
-                                              value: dropdownvalue,
-
-                                              // Down Arrow Icon
-                                              icon: const Icon(
-                                                  Icons.keyboard_arrow_down),
-
-                                              items: snapshot.data
-                                                  .map<
-                                                      DropdownMenuItem<
-                                                          String>>((fc) =>
-                                                      DropdownMenuItem<String>(
-                                                        value: (fc['id']
-                                                            .toString()),
-                                                        child: Text(fc['nama'],
-                                        style: TextStyle(
-                                            color: Colors.white,),),
-                                                      ))
-                                                  .toList(),
-                                              // After selecting the desired option,it will
-                                              // change button value to selected value
-                                              onChanged: (String? newValue) {
-                                                setState(() {
-                                                  dropdownvalue = newValue!;
-                                                });
-                                              },
                                             ),
-                                          );
-                                        }),
+                                          ))
+                                  .toList(),
+                              // After selecting the desired option,it will
+                              // change button value to selected value
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  dropdownvalue = newValue!;
+                                });
+                              },
+                            ),
+                          );
+                        }),
                     const SizedBox(
                       height: 12,
                     ),

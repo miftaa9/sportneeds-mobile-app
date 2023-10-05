@@ -48,7 +48,7 @@ class CustomerKalori extends StatefulWidget {
 class _CustomerKalori extends State<CustomerKalori> {
   // Initial Selected Value
   TextEditingController jumlah = TextEditingController();
-  String dropdownvalue = '1';
+  var dropdownvalue = null;
   var val2;
 
   // List of items in our dropdown menu
@@ -88,7 +88,7 @@ class _CustomerKalori extends State<CustomerKalori> {
     });
 
     final dtkalori = await supabase
-        .from('kalori_data')
+        .from('cabang_olahraga_aktifitas')
         .select()
         .eq('id', dropdownvalue)
         .single();
@@ -117,20 +117,20 @@ class _CustomerKalori extends State<CustomerKalori> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      dataDropdown();
-      setState(() {});
-    });
     super.initState();
     log("dewa2");
   }
-
-  final _futurex = supabase.from('kalori_data').select();
 
   @override
   Widget build(BuildContext context) {
     final arg = ModalRoute.of(context)!.settings.arguments as Map;
     final int uid = arg["user_id"];
+    final int cbid = arg["cabang_id"];
+    print("z ${cbid}");
+    final _futurex = supabase
+        .from('cabang_olahraga_aktifitas')
+        .select()
+        .eq('cabora_id', cbid);
 
     DateTime _selectedValue = DateTime.now();
     String dateO = DateFormat("yyyy-MM-dd").format(_selectedValue);
@@ -141,7 +141,7 @@ class _CustomerKalori extends State<CustomerKalori> {
         .eq('user_id', uid)
         .eq('tgl', dateO)
         .order('id', ascending: true);
-    ;
+
     return Scaffold(
         backgroundColor: Color(0xFF2B9EA4),
         appBar: const LayoutCustomerAppBar(
@@ -178,45 +178,54 @@ class _CustomerKalori extends State<CustomerKalori> {
                                           }
                                           final dat = snapshot.data!;
                                           log("zz ${dropdownvalue}");
+                                          log("zz ${dat}");
 
-                                          return Container(
-                                            width: 260,
-                                            height: 60,
-                                            child: DropdownButton(
-                                              isExpanded: true,
-                                              iconEnabledColor:
-                                                  Color(0xFF2B9EA4),
-                                              underline: Container(
-                                                width: 200,
-                                                height: 1,
-                                                color: Color(0xFF2B9EA4),
+                                          if (dat != null) {
+                                            return Container(
+                                              width: 260,
+                                              height: 60,
+                                              child: DropdownButton(
+                                                isExpanded: true,
+                                                iconEnabledColor:
+                                                    Color(0xFF2B9EA4),
+                                                underline: Container(
+                                                  width: 200,
+                                                  height: 1,
+                                                  color: Color(0xFF2B9EA4),
+                                                ),
+                                                // Initial Value
+                                                value: dropdownvalue,
+
+                                                // Down Arrow Icon
+                                                icon: const Icon(
+                                                    Icons.keyboard_arrow_down),
+
+                                                items: snapshot.data
+                                                    .map<
+                                                        DropdownMenuItem<
+                                                            String>>((fc) =>
+                                                        DropdownMenuItem<
+                                                            String>(
+                                                          value: (fc['id']
+                                                              .toString()),
+                                                          child:
+                                                              Text(fc['nama']),
+                                                        ))
+                                                    .toList(),
+                                                // After selecting the desired option,it will
+                                                // change button value to selected value
+                                                onChanged: (newValue) {
+                                                  setState(() {
+                                                    dropdownvalue = newValue!;
+                                                  });
+                                                },
                                               ),
-                                              // Initial Value
-                                              value: dropdownvalue,
-
-                                              // Down Arrow Icon
-                                              icon: const Icon(
-                                                  Icons.keyboard_arrow_down),
-
-                                              items: snapshot.data
-                                                  .map<
-                                                      DropdownMenuItem<
-                                                          String>>((fc) =>
-                                                      DropdownMenuItem<String>(
-                                                        value: (fc['id']
-                                                            .toString()),
-                                                        child: Text(fc['nama']),
-                                                      ))
-                                                  .toList(),
-                                              // After selecting the desired option,it will
-                                              // change button value to selected value
-                                              onChanged: (String? newValue) {
-                                                setState(() {
-                                                  dropdownvalue = newValue!;
-                                                });
-                                              },
-                                            ),
-                                          );
+                                            );
+                                          } else {
+                                            return const Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          }
                                         }),
                                     const SizedBox(
                                       height: 12,

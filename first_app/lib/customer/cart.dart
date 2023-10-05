@@ -5,6 +5,8 @@ import 'dart:developer';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:accordion/accordion.dart';
+import 'package:accordion/controllers.dart';
 
 class CustomerCart extends StatefulWidget {
   @override
@@ -120,6 +122,7 @@ class _CustomerCart extends State<CustomerCart> {
   @override
   Widget build(BuildContext context) {
     //final xfuture = supabase.from('cart').select<List<Map<String, dynamic>>>();
+    var cc2 = 0;
     return FutureBuilder<List>(
         future: getUserNamePref(),
         builder: (context, snapshot) {
@@ -282,28 +285,147 @@ class _CustomerCart extends State<CustomerCart> {
                                                             ],
                                                           ),
                                                         ),
-                                                        ListTile(
-                                                          title: RichText(
-                                                            selectionColor:
+                                                        Accordion(
+                                                            headerBorderColor:
                                                                 Color(
                                                                     0xFF2B9EA4),
-                                                            text: TextSpan(
-                                                              style: const TextStyle(
-                                                                  color: Color(
-                                                                      0xFF2B9EA4)),
-                                                              children: [
-                                                                for (var i = 0;
-                                                                    i < 24;
-                                                                    i++) ...[
-                                                                  TextSpan(
-                                                                      text:
-                                                                          "${ab[i]} : ${(country['a' + i.toString()] == null) ? '' : (country['a' + i.toString()][0])}\n"),
-                                                                ],
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          onTap: () {},
-                                                        ),
+                                                            headerBorderColorOpened:
+                                                                Color(
+                                                                    0xFF2B9EA4),
+                                                            // headerBorderWidth: 1,
+                                                            contentBackgroundColor:
+                                                                Colors.white,
+                                                            contentBorderColor:
+                                                                Color(
+                                                                    0xFF2B9EA4),
+                                                            contentBorderWidth:
+                                                                3,
+                                                            contentHorizontalPadding:
+                                                                20,
+                                                            scaleWhenAnimating:
+                                                                true,
+                                                            openAndCloseAnimation:
+                                                                true,
+                                                            headerPadding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical: 7,
+                                                                    horizontal:
+                                                                        15),
+                                                            sectionOpeningHapticFeedback:
+                                                                SectionHapticFeedback
+                                                                    .heavy,
+                                                            sectionClosingHapticFeedback:
+                                                                SectionHapticFeedback
+                                                                    .light,
+                                                            children: [
+                                                              AccordionSection(
+                                                                isOpen: false,
+                                                                headerBackgroundColor:
+                                                                    Color(
+                                                                        0xFF2B9EA4),
+                                                                header:
+                                                                    RichText(
+                                                                  text:
+                                                                      const TextSpan(
+                                                                    text:
+                                                                        'Kandungan ',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize:
+                                                                            16),
+                                                                    children: <TextSpan>[
+                                                                      TextSpan(
+                                                                          text:
+                                                                              'Gizi',
+                                                                          style:
+                                                                              TextStyle(fontWeight: FontWeight.bold)),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                content:
+                                                                    DataTable(
+                                                                  sortAscending:
+                                                                      true,
+                                                                  sortColumnIndex:
+                                                                      1,
+                                                                  showBottomBorder:
+                                                                      false,
+                                                                  columns: const [
+                                                                    DataColumn(
+                                                                        label: Text(
+                                                                            'No',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: Color(0xFF2B9EA4),
+                                                                              fontSize: 10,
+                                                                            )),
+                                                                        numeric:
+                                                                            true),
+                                                                    DataColumn(
+                                                                        label: Text(
+                                                                            'Nama',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: Color(0xFF2B9EA4),
+                                                                              fontSize: 10,
+                                                                            ))),
+                                                                    DataColumn(
+                                                                        label: Text(
+                                                                            'Nilai',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: Color(0xFF2B9EA4),
+                                                                              fontSize: 10,
+                                                                            )),
+                                                                        numeric:
+                                                                            true),
+                                                                  ],
+                                                                  rows: [
+                                                                    ...ab
+                                                                        .asMap()
+                                                                        .keys
+                                                                        .toList()
+                                                                        .map(
+                                                                            (i) {
+                                                                      var ccz = country['a' +
+                                                                              (i + 1).toString()]
+                                                                          [
+                                                                          index];
+                                                                      var cc = (ccz == null ||
+                                                                              ccz.isEmpty)
+                                                                          ? ''
+                                                                          : ccz;
+                                                                      return DataRow(
+                                                                        cells: [
+                                                                          DataCell(Text(
+                                                                              (i + 1).toString(),
+                                                                              textAlign: TextAlign.right,
+                                                                              style: TextStyle(
+                                                                                color: Color(0xFF2B9EA4),
+                                                                                fontSize: 10,
+                                                                              ))),
+                                                                          DataCell(Text(
+                                                                              ab[i],
+                                                                              style: TextStyle(
+                                                                                color: Color(0xFF2B9EA4),
+                                                                                fontSize: 10,
+                                                                              ))),
+                                                                          DataCell(Text(
+                                                                              '${cc}',
+                                                                              textAlign: TextAlign.right,
+                                                                              style: TextStyle(
+                                                                                color: Color(0xFF2B9EA4),
+                                                                                fontSize: 10,
+                                                                              )))
+                                                                        ],
+                                                                      );
+                                                                    })
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ]),
                                                       ],
                                                     ),
                                                   );
